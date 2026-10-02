@@ -102,6 +102,11 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .hero:hover img {
+      transform: scale(1.06);
     }
 
     .hero::after {
@@ -220,7 +225,7 @@
       margin: 0 auto;
       padding: 40px 16px;
       display: grid;
-      grid-template-columns: 1.2fr 1fr;
+      grid-template-columns: 1fr auto;
       gap: 24px;
     }
 
@@ -232,7 +237,7 @@
 
     .footer-inner h2 span { color: var(--sunset); }
 
-    .contact-list { list-style: none; }
+    .contact-list { list-style: none; justify-self: end; }
     .contact-list li { margin-bottom: 6px; }
     .contact-list strong { color: #fff; margin-right: 6px; }
 
@@ -271,6 +276,8 @@
       .cards { grid-template-columns: 1fr; }
 
       .footer-inner { grid-template-columns: 1fr; }
+
+      .contact-list { justify-self: start; }
 
       .hero { height: 60vh; }
     }
