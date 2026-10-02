@@ -111,11 +111,20 @@
       transform: scale(1.22);
     }
 
+    .hero {
+      box-shadow: 0 14px 32px rgba(31, 59, 92, 0.35);
+    }
+
     .hero::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(31, 59, 92, 0.1) 40%, rgba(31, 59, 92, 0.75));
+      background:
+        linear-gradient(to bottom, rgba(31, 59, 92, 0.55) 0%, rgba(31, 59, 92, 0) 28%),
+        linear-gradient(to top, rgba(31, 59, 92, 0.8) 0%, rgba(31, 59, 92, 0) 58%),
+        linear-gradient(120deg, rgba(240, 138, 75, 0.28), rgba(47, 102, 144, 0.12));
+      box-shadow: inset 0 0 120px rgba(31, 59, 92, 0.45);
+      pointer-events: none;
     }
 
     .hero-text {
@@ -183,6 +192,15 @@
       width: 100%;
       aspect-ratio: 4 / 3;
       object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .card-img {
+      overflow: hidden;
+    }
+
+    .card:hover img {
+      transform: scale(1.1);
     }
 
     .card-body { padding: 20px; }
@@ -313,42 +331,42 @@
       <img src="images/about-1.png" alt="맑은 낮, 푸른 바다와 항구가 내려다보이는 해솔마을 풍경">
       <div class="hero-text">
         <h1>해솔마을</h1>
-        <p>햇살이 바다에 반짝이는, 조용하고 따뜻한 바닷가 작은 마을</p>
+        <p>햇살이 바다에 반짝반짝 ✨ 조용하고 따뜻한 바닷가 작은 마을</p>
       </div>
     </section>
 
     <section class="section">
-      <h2 class="section-title">해솔마을 둘러보기</h2>
-      <p class="section-sub">이번 주말, 바다 냄새 가득한 해솔마을로 떠나 보세요</p>
+      <h2 class="section-title">🧭 해솔마을 둘러보기</h2>
+      <p class="section-sub">이번 주말, 바다 냄새 솔솔 나는 해솔마을로 놀러 오세요 🌊</p>
 
       <div class="cards">
         <a href="spots.html" class="card">
-          <img src="images/spots-1.png" alt="파도가 부서지는 바위 위에 선 하얀 등대와 나무다리" style="object-position: 50% 30%;">
+          <div class="card-img"><img src="images/spots-1.png" alt="파도가 부서지는 바위 위에 선 하얀 등대와 나무다리" style="object-position: 50% 30%;"></div>
           <div class="card-body">
-            <span class="card-tag">명소</span>
+            <span class="card-tag">📸 명소</span>
             <h3>하얀 등대와 바다 산책길</h3>
-            <p>파도 소리를 따라 나무다리를 건너면 만나는 해솔마을의 상징, 하얀 등대.</p>
-            <span class="card-more">명소 보러 가기 →</span>
+            <p>파도 소리 들으며 나무다리를 건너면 짠! 우리 마을의 상징, 하얀 등대가 반겨 줘요.</p>
+            <span class="card-more">명소 구경하러 가기 →</span>
           </div>
         </a>
 
         <a href="food.html" class="card">
-          <img src="images/food-1.png" alt="김 가루와 전복을 올린 따뜻한 전복미역죽">
+          <div class="card-img"><img src="images/food-1.png" alt="김 가루와 전복을 올린 따뜻한 전복미역죽"></div>
           <div class="card-body">
-            <span class="card-tag">먹거리</span>
+            <span class="card-tag">🍲 먹거리</span>
             <h3>전복미역죽</h3>
-            <p>마을 앞바다에서 키운 전복과 미역을 푹 끓여 낸 따뜻한 한 그릇.</p>
-            <span class="card-more">먹거리 보러 가기 →</span>
+            <p>앞바다에서 키운 전복과 미역을 푹 끓여 낸, 속까지 따뜻해지는 한 그릇이에요.</p>
+            <span class="card-more">먹거리 맛보러 가기 →</span>
           </div>
         </a>
 
         <a href="festival.html" class="card">
-          <img src="images/festival-1.png" alt="등불이 늘어선 밤 바닷길을 걷는 사람들">
+          <div class="card-img"><img src="images/festival-1.png" alt="등불이 늘어선 밤 바닷길을 걷는 사람들"></div>
           <div class="card-body">
-            <span class="card-tag">축제 · 8월</span>
+            <span class="card-tag">🏮 축제 · 8월</span>
             <h3>해솔 등불축제</h3>
-            <p>여름밤 바닷가를 수놓는 수천 개의 등불, 해솔마을의 가장 빛나는 날.</p>
-            <span class="card-more">축제 보러 가기 →</span>
+            <p>여름밤 바닷가를 환하게 수놓는 수천 개의 등불, 해솔마을이 가장 반짝이는 날이에요!</p>
+            <span class="card-more">축제 구경하러 가기 →</span>
           </div>
         </a>
       </div>
@@ -359,13 +377,13 @@
     <div class="footer-inner">
       <div>
         <h2>해솔<span>마을</span> 여행 안내소</h2>
-        <p>궁금한 점은 언제든 편하게 연락 주세요.</p>
+        <p>궁금한 게 있으면 언제든 편하게 연락 주세요 😊</p>
       </div>
       <ul class="contact-list">
-        <li><strong>전화</strong> 061-123-4567</li>
-        <li><strong>이메일</strong> hello@haesol.example</li>
-        <li><strong>주소</strong> 전라남도 해솔군 바닷길 12 (가상)</li>
-        <li><strong>운영</strong> 매일 09:00 – 18:00</li>
+        <li><strong>📞 전화</strong> 061-123-4567</li>
+        <li><strong>✉️ 이메일</strong> hello@haesol.example</li>
+        <li><strong>📍 주소</strong> 전라남도 해솔군 바닷길 12 (가상)</li>
+        <li><strong>🕘 운영</strong> 매일 09:00 – 18:00</li>
       </ul>
     </div>
     <p class="copyright">© 2026 해솔마을. 이 사이트의 마을과 정보는 가상으로 만든 것입니다.</p>

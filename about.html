@@ -109,11 +109,20 @@
       transform: scale(1.06);
     }
 
+    .hero {
+      box-shadow: 0 14px 32px rgba(31, 59, 92, 0.35);
+    }
+
     .hero::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(31, 59, 92, 0.1) 40%, rgba(31, 59, 92, 0.75));
+      background:
+        linear-gradient(to bottom, rgba(31, 59, 92, 0.55) 0%, rgba(31, 59, 92, 0) 28%),
+        linear-gradient(to top, rgba(31, 59, 92, 0.8) 0%, rgba(31, 59, 92, 0) 58%),
+        linear-gradient(120deg, rgba(240, 138, 75, 0.28), rgba(47, 102, 144, 0.12));
+      box-shadow: inset 0 0 120px rgba(31, 59, 92, 0.45);
+      pointer-events: none;
     }
 
     .hero-text {
@@ -178,6 +187,11 @@
       width: 100%;
       aspect-ratio: 4 / 3;
       object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .story-img:hover img {
+      transform: scale(1.1);
     }
 
     .story-text p {
@@ -253,6 +267,15 @@
       width: 100%;
       aspect-ratio: 16 / 9;
       object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .card-img {
+      overflow: hidden;
+    }
+
+    .card:hover img {
+      transform: scale(1.1);
     }
 
     .card-body { padding: 20px; }
@@ -379,85 +402,85 @@
     <section class="hero">
       <img src="images/index-1.png" alt="노을 진 바다와 등대가 보이는 해솔마을 항구">
       <div class="hero-text">
-        <h1>마을 소개</h1>
-        <p>바다와 소나무가 함께 사는 작은 마을, 해솔마을 이야기</p>
+        <h1>🏡 마을 소개</h1>
+        <p>바다랑 소나무랑 사이좋게 사는 작은 마을, 해솔마을이에요</p>
       </div>
     </section>
 
     <section class="section">
-      <h2 class="section-title">해솔마을 이야기</h2>
-      <p class="section-sub">바다를 닮아 조용하고, 노을을 닮아 따뜻한 마을</p>
+      <h2 class="section-title">📖 해솔마을 이야기</h2>
+      <p class="section-sub">바다처럼 조용하고, 노을처럼 포근한 우리 마을 🌅</p>
 
       <div class="story">
         <div class="story-img">
           <img src="images/about-1.png" alt="소나무 숲과 푸른 바다, 작은 배가 모인 해솔마을 항구">
         </div>
         <div class="story-text">
-          <p>해솔마을의 이름은 <strong>'해(海)'와 '솔'</strong>에서 왔습니다. 푸른 바다 옆으로 소나무 숲이 병풍처럼 이어져, 옛날 어부들이 먼 바다에서 소나무 숲만 보고도 집을 찾아왔다고 합니다.</p>
-          <p>마을 사람들은 대대로 앞바다에서 <strong>전복과 미역</strong>을 키우며 살아왔습니다. 새벽이면 작은 배들이 바다로 나가고, 해 질 녘이면 항구 위로 노을이 내려앉습니다.</p>
-          <p>해마다 8월에는 바다와 골목을 등불로 밝히는 <strong>해솔 등불축제</strong>가 열립니다. 복잡하지 않아 더 좋은 곳, 돌담길 고양이도 느긋하게 낮잠을 자는 곳. 주말에 천천히 쉬어 가기 좋은 마을입니다.</p>
+          <p>🌊 해솔마을이라는 이름은 <strong>'해(海)'와 '솔'</strong>에서 왔어요. 푸른 바다 옆으로 소나무 숲이 쭉 이어져 있어서, 옛날 어부 할아버지들은 먼 바다에서도 소나무 숲만 보면 "아, 다 왔다!" 하셨대요.</p>
+          <p>🐚 마을 사람들은 오래전부터 앞바다에서 <strong>전복과 미역</strong>을 키우며 살아왔어요. 새벽에는 작은 배들이 바다로 나가고, 해 질 녘에는 항구 위로 노을이 살며시 내려앉는답니다.</p>
+          <p>🏮 8월이면 바다와 골목이 온통 불빛으로 반짝이는 <strong>해솔 등불축제</strong>가 열려요. 북적이지 않아 더 좋은 마을, 돌담길 고양이도 느긋하게 낮잠 자는 곳이에요 😸 이번 주말, 천천히 쉬러 오세요!</p>
         </div>
       </div>
     </section>
 
     <section class="section">
-      <h2 class="section-title">마을 기본 정보</h2>
-      <p class="section-sub">한눈에 보는 해솔마을 (가상 정보)</p>
+      <h2 class="section-title">📌 마을 기본 정보</h2>
+      <p class="section-sub">해솔마을, 한눈에 쏙! (모두 상상으로 만든 가상 정보예요 😉)</p>
 
       <div class="info-grid">
         <div class="info-item">
-          <span class="info-label">위치</span>
+          <span class="info-label">📍 위치</span>
           <p class="info-value">전라남도 해솔군</p>
-          <p class="info-note">남쪽 바닷가</p>
+          <p class="info-note">남쪽 바닷가에 폭 안겨 있어요</p>
         </div>
         <div class="info-item">
-          <span class="info-label">인구</span>
+          <span class="info-label">👨‍👩‍👧 인구</span>
           <p class="info-value">약 312명</p>
-          <p class="info-note">148세대</p>
+          <p class="info-note">148가구가 오순도순 살아요</p>
         </div>
         <div class="info-item">
-          <span class="info-label">면적</span>
+          <span class="info-label">📏 면적</span>
           <p class="info-value">4.2㎢</p>
-          <p class="info-note">해안선 길이 약 3.8km</p>
+          <p class="info-note">바닷길 산책 약 3.8km</p>
         </div>
         <div class="info-item">
-          <span class="info-label">특산물</span>
+          <span class="info-label">🐚 특산물</span>
           <p class="info-value">전복 · 미역</p>
-          <p class="info-note">마을 앞바다 양식</p>
+          <p class="info-note">앞바다에서 정성껏 키워요</p>
         </div>
         <div class="info-item">
-          <span class="info-label">축제</span>
+          <span class="info-label">🏮 축제</span>
           <p class="info-value">해솔 등불축제</p>
-          <p class="info-note">매년 8월</p>
+          <p class="info-note">매년 8월, 놓치지 마세요!</p>
         </div>
         <div class="info-item">
-          <span class="info-label">분위기</span>
-          <p class="info-value">조용하고 따뜻함</p>
-          <p class="info-note">주말 휴식 여행지</p>
+          <span class="info-label">☺️ 분위기</span>
+          <p class="info-value">조용하고 따뜻해요</p>
+          <p class="info-note">주말에 쉬어 가기 딱 좋아요</p>
         </div>
       </div>
     </section>
 
     <section class="section">
-      <h2 class="section-title">마을 그림</h2>
-      <p class="section-sub">해솔마을의 골목과 밤바다</p>
+      <h2 class="section-title">🎨 마을 그림</h2>
+      <p class="section-sub">골목길도, 밤바다도 구경해 보세요</p>
 
       <div class="cards">
         <div class="card">
-          <img src="images/about-2.png" alt="노을빛 돌담길에서 햇볕을 쬐는 고양이">
+          <div class="card-img"><img src="images/about-2.png" alt="노을빛 돌담길에서 햇볕을 쬐는 고양이"></div>
           <div class="card-body">
-            <span class="card-tag">골목</span>
+            <span class="card-tag">🌸 골목</span>
             <h3>노을빛 돌담길</h3>
-            <p>꽃이 핀 돌담 사이로 바다가 보이는 골목, 고양이가 가장 좋아하는 자리예요.</p>
+            <p>꽃이 핀 돌담 사이로 바다가 빼꼼! 고양이가 제일 좋아하는 낮잠 명당이에요 😺</p>
           </div>
         </div>
 
         <div class="card">
-          <img src="images/festival-1.png" alt="등불이 늘어선 밤 바닷길">
+          <div class="card-img"><img src="images/festival-1.png" alt="등불이 늘어선 밤 바닷길"></div>
           <div class="card-body">
-            <span class="card-tag">밤바다</span>
+            <span class="card-tag">🌙 밤바다</span>
             <h3>등불이 켜지는 바닷길</h3>
-            <p>축제의 밤이면 방파제와 마을 길이 따뜻한 등불로 가득 찹니다.</p>
+            <p>축제의 밤이 되면 방파제와 마을 길이 포근한 등불로 가득 차요 ✨</p>
           </div>
         </div>
       </div>
@@ -468,13 +491,13 @@
     <div class="footer-inner">
       <div>
         <h2>해솔<span>마을</span> 여행 안내소</h2>
-        <p>궁금한 점은 언제든 편하게 연락 주세요.</p>
+        <p>궁금한 게 있으면 언제든 편하게 연락 주세요 😊</p>
       </div>
       <ul class="contact-list">
-        <li><strong>전화</strong> 061-123-4567</li>
-        <li><strong>이메일</strong> hello@haesol.example</li>
-        <li><strong>주소</strong> 전라남도 해솔군 바닷길 12 (가상)</li>
-        <li><strong>운영</strong> 매일 09:00 – 18:00</li>
+        <li><strong>📞 전화</strong> 061-123-4567</li>
+        <li><strong>✉️ 이메일</strong> hello@haesol.example</li>
+        <li><strong>📍 주소</strong> 전라남도 해솔군 바닷길 12 (가상)</li>
+        <li><strong>🕘 운영</strong> 매일 09:00 – 18:00</li>
       </ul>
     </div>
     <p class="copyright">© 2026 해솔마을. 이 사이트의 마을과 정보는 가상으로 만든 것입니다.</p>
