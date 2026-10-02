@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>마을 소개 | 해솔마을</title>
+  <title>명소 | 해솔마을</title>
   <style>
     :root {
       --sea-deep: #1f3b5c;
@@ -96,21 +96,19 @@
       height: 46vh;
       min-height: 300px;
       overflow: hidden;
+      box-shadow: 0 14px 32px rgba(31, 59, 92, 0.35);
     }
 
     .hero img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: 50% 35%;
       transition: transform 0.6s ease;
     }
 
     .hero:hover img {
       transform: scale(1.06);
-    }
-
-    .hero {
-      box-shadow: 0 14px 32px rgba(31, 59, 92, 0.35);
     }
 
     .hero::after {
@@ -154,8 +152,6 @@
       padding: 64px 16px;
     }
 
-    .section + .section { padding-top: 0; }
-
     .section-title {
       text-align: center;
       font-size: 1.8rem;
@@ -168,111 +164,7 @@
       margin-top: 6px;
     }
 
-    /* ===== 마을 이야기 ===== */
-    .story {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      align-items: center;
-      margin-top: 36px;
-    }
-
-    .story-img {
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 4px 18px rgba(31, 59, 92, 0.1);
-    }
-
-    .story-img img {
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-
-    .story-img:hover img {
-      transform: scale(1.1);
-    }
-
-    .story-text p {
-      margin-bottom: 14px;
-      color: #444;
-    }
-
-    .story-text p:last-child { margin-bottom: 0; }
-
-    .story-text strong { color: var(--sea-deep); }
-
-    /* ===== 기본 정보 ===== */
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 36px;
-    }
-
-    .info-item {
-      background: #fff;
-      border-radius: var(--radius);
-      padding: 24px 20px;
-      box-shadow: 0 4px 18px rgba(31, 59, 92, 0.1);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.25s, box-shadow 0.25s;
-    }
-
-    .info-item:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 18px 34px rgba(240, 138, 75, 0.35);
-    }
-
-    /* 노을색 선: 카드 아래쪽에서 왼쪽 → 오른쪽으로 그려져요 */
-    .info-item::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 5px;
-      background: linear-gradient(90deg, #f7b267, #f08a4b, #e8647a);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.4s ease;
-    }
-
-    .info-item:hover::after {
-      transform: scaleX(1);
-    }
-
-    .info-item .info-value { transition: color 0.25s; }
-
-    .info-item:hover .info-value { color: var(--sunset-deep); }
-
-    .info-label {
-      display: inline-block;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--sunset-deep);
-      background: #fdeee4;
-      padding: 2px 10px;
-      border-radius: 999px;
-    }
-
-    .info-value {
-      margin-top: 10px;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--sea-deep);
-    }
-
-    .info-note {
-      margin-top: 2px;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    /* ===== 마을 그림 ===== */
+    /* ===== 명소 카드 ===== */
     .cards {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -319,15 +211,13 @@
 
     .card:hover h3 { color: var(--sunset-deep); }
 
+    .card-img { overflow: hidden; }
+
     .card img {
       width: 100%;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 4 / 3;
       object-fit: cover;
       transition: transform 0.5s ease;
-    }
-
-    .card-img {
-      overflow: hidden;
     }
 
     .card:hover img {
@@ -356,6 +246,15 @@
       margin-top: 6px;
       color: var(--muted);
       font-size: 0.95rem;
+    }
+
+    .card .card-addr {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed #e3d9cc;
+      color: var(--sea);
+      font-size: 0.9rem;
+      font-weight: 600;
     }
 
     /* ===== 아래: 연락처 ===== */
@@ -417,10 +316,6 @@
 
       .nav a { padding: 12px; }
 
-      .story { grid-template-columns: 1fr; gap: 24px; }
-
-      .info-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-
       .cards { grid-template-columns: 1fr; }
 
       .footer-inner { grid-template-columns: 1fr; }
@@ -440,8 +335,8 @@
       <nav class="nav" id="siteNav">
         <ul>
           <li><a href="index.html">홈</a></li>
-          <li><a href="about.html" class="active">마을 소개</a></li>
-          <li><a href="spots.html">명소</a></li>
+          <li><a href="about.html">마을 소개</a></li>
+          <li><a href="spots.html" class="active">명소</a></li>
           <li><a href="food.html">먹거리</a></li>
           <li><a href="festival.html">축제</a></li>
           <li><a href="course.html">추천 코스</a></li>
@@ -456,87 +351,55 @@
 
   <main>
     <section class="hero">
-      <img src="images/index-1.png" alt="노을 진 바다와 등대가 보이는 해솔마을 항구">
+      <img src="images/about-1.png" alt="맑은 날 푸른 바다와 항구가 내려다보이는 해솔마을">
       <div class="hero-text">
-        <h1>🏡 마을 소개</h1>
-        <p>바다랑 소나무랑 사이좋게 사는 작은 마을, 해솔마을이에요</p>
+        <h1>📸 명소</h1>
+        <p>걷다 보면 어디든 그림이 되는 해솔마을 베스트 4곳이에요</p>
       </div>
     </section>
 
     <section class="section">
-      <h2 class="section-title">📖 해솔마을 이야기</h2>
-      <p class="section-sub">바다처럼 조용하고, 노을처럼 포근한 우리 마을 🌅</p>
-
-      <div class="story">
-        <div class="story-img">
-          <img src="images/about-1.png" alt="소나무 숲과 푸른 바다, 작은 배가 모인 해솔마을 항구">
-        </div>
-        <div class="story-text">
-          <p>🌊 해솔마을이라는 이름은 <strong>'해(海)'와 '솔'</strong>에서 왔어요. 푸른 바다 옆으로 소나무 숲이 쭉 이어져 있어서, 옛날 어부 할아버지들은 먼 바다에서도 소나무 숲만 보면 "아, 다 왔다!" 하셨대요.</p>
-          <p>🐚 마을 사람들은 오래전부터 앞바다에서 <strong>전복과 미역</strong>을 키우며 살아왔어요. 새벽에는 작은 배들이 바다로 나가고, 해 질 녘에는 항구 위로 노을이 살며시 내려앉는답니다.</p>
-          <p>🏮 8월이면 바다와 골목이 온통 불빛으로 반짝이는 <strong>해솔 등불축제</strong>가 열려요. 북적이지 않아 더 좋은 마을, 돌담길 고양이도 느긋하게 낮잠 자는 곳이에요 😸 이번 주말, 천천히 쉬러 오세요!</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2 class="section-title">📌 마을 기본 정보</h2>
-      <p class="section-sub">해솔마을, 한눈에 쏙! (모두 상상으로 만든 가상 정보예요 😉)</p>
-
-      <div class="info-grid">
-        <div class="info-item">
-          <span class="info-label">📍 위치</span>
-          <p class="info-value">전라남도 해솔군</p>
-          <p class="info-note">남쪽 바닷가에 폭 안겨 있어요</p>
-        </div>
-        <div class="info-item">
-          <span class="info-label">👨‍👩‍👧 인구</span>
-          <p class="info-value">약 312명</p>
-          <p class="info-note">148가구가 오순도순 살아요</p>
-        </div>
-        <div class="info-item">
-          <span class="info-label">📏 면적</span>
-          <p class="info-value">4.2㎢</p>
-          <p class="info-note">바닷길 산책 약 3.8km</p>
-        </div>
-        <div class="info-item">
-          <span class="info-label">🐚 특산물</span>
-          <p class="info-value">전복 · 미역</p>
-          <p class="info-note">앞바다에서 정성껏 키워요</p>
-        </div>
-        <div class="info-item">
-          <span class="info-label">🏮 축제</span>
-          <p class="info-value">해솔 등불축제</p>
-          <p class="info-note">매년 8월, 놓치지 마세요!</p>
-        </div>
-        <div class="info-item">
-          <span class="info-label">☺️ 분위기</span>
-          <p class="info-value">조용하고 따뜻해요</p>
-          <p class="info-note">주말에 쉬어 가기 딱 좋아요</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2 class="section-title">🎨 마을 그림</h2>
-      <p class="section-sub">골목길도, 밤바다도 구경해 보세요</p>
+      <h2 class="section-title">🧭 해솔마을 가볼 만한 곳</h2>
+      <p class="section-sub">천천히 걸으면서 하나씩 만나 보세요 🚶</p>
 
       <div class="cards">
         <div class="card">
-          <div class="card-img"><img src="images/about-2.png" alt="노을빛 돌담길에서 햇볕을 쬐는 고양이"></div>
+          <div class="card-img"><img src="images/spots-1.png" alt="파도가 부서지는 바위 위에 선 하얀 등대와 나무다리" style="object-position: 50% 30%;"></div>
           <div class="card-body">
-            <span class="card-tag">🌸 골목</span>
-            <h3>노을빛 돌담길</h3>
-            <p>꽃이 핀 돌담 사이로 바다가 빼꼼! 고양이가 제일 좋아하는 낮잠 명당이에요 😺</p>
+            <span class="card-tag">🗼 마을의 상징</span>
+            <h3>하얀 등대</h3>
+            <p>파도 소리 들으며 나무다리를 건너면 만나는 해솔마을 인생샷 1번지예요.</p>
+            <p class="card-addr">📍 전라남도 해솔군 바닷길 1 (가상)</p>
           </div>
         </div>
 
         <div class="card">
-          <div class="card-img"><img src="images/festival-1.png" alt="등불이 늘어선 밤 바닷길"></div>
+          <div class="card-img"><img src="images/spots-2.png" alt="소나무 사이로 바다가 보이는 햇살 가득한 산책길과 나무 벤치"></div>
           <div class="card-body">
-            <span class="card-tag">🌙 밤바다</span>
-            <h3>등불이 켜지는 바닷길</h3>
-            <p>축제의 밤이 되면 방파제와 마을 길이 포근한 등불로 가득 차요 ✨</p>
+            <span class="card-tag">🌲 산책하기 좋아요</span>
+            <h3>솔숲 바닷길</h3>
+            <p>소나무 그늘 사이로 반짝이는 바다가 보여요. 벤치에서 잠깐 쉬어 가세요.</p>
+            <p class="card-addr">📍 전라남도 해솔군 솔숲길 28 (가상)</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-img"><img src="images/spots-3.png" alt="맑은 파도가 밀려오는 동글동글한 몽돌 해변"></div>
+          <div class="card-body">
+            <span class="card-tag">🪨 소리가 좋아요</span>
+            <h3>몽돌 해변</h3>
+            <p>파도가 쓸고 갈 때마다 몽돌이 사르르 노래해요. 맨발로 걸어 봐도 좋아요.</p>
+            <p class="card-addr">📍 전라남도 해솔군 몽돌길 7 (가상)</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-img"><img src="images/spots-4.png" alt="붉은 노을이 지는 바다를 바라보는 나무 전망대"></div>
+          <div class="card-body">
+            <span class="card-tag">🌅 노을 맛집</span>
+            <h3>노을 전망대</h3>
+            <p>해 질 녘에 오면 하늘과 바다가 온통 주황빛이에요. 꼭 저녁에 와 보세요!</p>
+            <p class="card-addr">📍 전라남도 해솔군 노을길 45 (가상)</p>
           </div>
         </div>
       </div>
