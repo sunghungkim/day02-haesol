@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>해솔마을 | 바닷가 작은 마을 여행</title>
+  <title>마을 소개 | 해솔마을</title>
   <style>
     :root {
       --sea-deep: #1f3b5c;
@@ -93,8 +93,8 @@
     /* ===== 가운데: 큰 그림과 소개 ===== */
     .hero {
       position: relative;
-      height: 78vh;
-      min-height: 420px;
+      height: 46vh;
+      min-height: 300px;
       overflow: hidden;
     }
 
@@ -145,6 +145,8 @@
       padding: 64px 16px;
     }
 
+    .section + .section { padding-top: 0; }
+
     .section-title {
       text-align: center;
       font-size: 1.8rem;
@@ -157,9 +159,79 @@
       margin-top: 6px;
     }
 
-    .cards {
+    /* ===== 마을 이야기 ===== */
+    .story {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      margin-top: 36px;
+    }
+
+    .story-img {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(31, 59, 92, 0.1);
+    }
+
+    .story-img img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+    .story-text p {
+      margin-bottom: 14px;
+      color: #444;
+    }
+
+    .story-text p:last-child { margin-bottom: 0; }
+
+    .story-text strong { color: var(--sea-deep); }
+
+    /* ===== 기본 정보 ===== */
+    .info-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+
+    .info-item {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      box-shadow: 0 4px 18px rgba(31, 59, 92, 0.1);
+      text-align: center;
+    }
+
+    .info-label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--sunset-deep);
+      background: #fdeee4;
+      padding: 2px 10px;
+      border-radius: 999px;
+    }
+
+    .info-value {
+      margin-top: 10px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--sea-deep);
+    }
+
+    .info-note {
+      margin-top: 2px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    /* ===== 마을 그림 ===== */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 24px;
       margin-top: 36px;
     }
@@ -179,7 +251,7 @@
 
     .card img {
       width: 100%;
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 16 / 9;
       object-fit: cover;
     }
 
@@ -205,13 +277,6 @@
       margin-top: 6px;
       color: var(--muted);
       font-size: 0.95rem;
-    }
-
-    .card-more {
-      display: inline-block;
-      margin-top: 14px;
-      font-weight: 700;
-      color: var(--sea);
     }
 
     /* ===== 아래: 연락처 ===== */
@@ -273,13 +338,17 @@
 
       .nav a { padding: 12px; }
 
+      .story { grid-template-columns: 1fr; gap: 24px; }
+
+      .info-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
       .cards { grid-template-columns: 1fr; }
 
       .footer-inner { grid-template-columns: 1fr; }
 
       .contact-list { justify-self: start; }
 
-      .hero { height: 60vh; }
+      .hero { height: 38vh; }
     }
   </style>
 </head>
@@ -291,8 +360,8 @@
       <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteNav">☰ 메뉴</button>
       <nav class="nav" id="siteNav">
         <ul>
-          <li><a href="index.html" class="active">홈</a></li>
-          <li><a href="about.html">마을 소개</a></li>
+          <li><a href="index.html">홈</a></li>
+          <li><a href="about.html" class="active">마을 소개</a></li>
           <li><a href="spots.html">명소</a></li>
           <li><a href="food.html">먹거리</a></li>
           <li><a href="festival.html">축제</a></li>
@@ -308,47 +377,89 @@
 
   <main>
     <section class="hero">
-      <img src="images/about-1.png" alt="맑은 낮, 푸른 바다와 항구가 내려다보이는 해솔마을 풍경">
+      <img src="images/index-1.png" alt="노을 진 바다와 등대가 보이는 해솔마을 항구">
       <div class="hero-text">
-        <h1>해솔마을</h1>
-        <p>햇살이 바다에 반짝이는, 조용하고 따뜻한 바닷가 작은 마을</p>
+        <h1>마을 소개</h1>
+        <p>바다와 소나무가 함께 사는 작은 마을, 해솔마을 이야기</p>
       </div>
     </section>
 
     <section class="section">
-      <h2 class="section-title">해솔마을 둘러보기</h2>
-      <p class="section-sub">이번 주말, 바다 냄새 가득한 해솔마을로 떠나 보세요</p>
+      <h2 class="section-title">해솔마을 이야기</h2>
+      <p class="section-sub">바다를 닮아 조용하고, 노을을 닮아 따뜻한 마을</p>
+
+      <div class="story">
+        <div class="story-img">
+          <img src="images/about-1.png" alt="소나무 숲과 푸른 바다, 작은 배가 모인 해솔마을 항구">
+        </div>
+        <div class="story-text">
+          <p>해솔마을의 이름은 <strong>'해(海)'와 '솔'</strong>에서 왔습니다. 푸른 바다 옆으로 소나무 숲이 병풍처럼 이어져, 옛날 어부들이 먼 바다에서 소나무 숲만 보고도 집을 찾아왔다고 합니다.</p>
+          <p>마을 사람들은 대대로 앞바다에서 <strong>전복과 미역</strong>을 키우며 살아왔습니다. 새벽이면 작은 배들이 바다로 나가고, 해 질 녘이면 항구 위로 노을이 내려앉습니다.</p>
+          <p>해마다 8월에는 바다와 골목을 등불로 밝히는 <strong>해솔 등불축제</strong>가 열립니다. 복잡하지 않아 더 좋은 곳, 돌담길 고양이도 느긋하게 낮잠을 자는 곳. 주말에 천천히 쉬어 가기 좋은 마을입니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">마을 기본 정보</h2>
+      <p class="section-sub">한눈에 보는 해솔마을 (가상 정보)</p>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">위치</span>
+          <p class="info-value">전라남도 해솔군</p>
+          <p class="info-note">남쪽 바닷가</p>
+        </div>
+        <div class="info-item">
+          <span class="info-label">인구</span>
+          <p class="info-value">약 312명</p>
+          <p class="info-note">148세대</p>
+        </div>
+        <div class="info-item">
+          <span class="info-label">면적</span>
+          <p class="info-value">4.2㎢</p>
+          <p class="info-note">해안선 길이 약 3.8km</p>
+        </div>
+        <div class="info-item">
+          <span class="info-label">특산물</span>
+          <p class="info-value">전복 · 미역</p>
+          <p class="info-note">마을 앞바다 양식</p>
+        </div>
+        <div class="info-item">
+          <span class="info-label">축제</span>
+          <p class="info-value">해솔 등불축제</p>
+          <p class="info-note">매년 8월</p>
+        </div>
+        <div class="info-item">
+          <span class="info-label">분위기</span>
+          <p class="info-value">조용하고 따뜻함</p>
+          <p class="info-note">주말 휴식 여행지</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">마을 그림</h2>
+      <p class="section-sub">해솔마을의 골목과 밤바다</p>
 
       <div class="cards">
-        <a href="spots.html" class="card">
-          <img src="images/spots-1.png" alt="파도가 부서지는 바위 위에 선 하얀 등대와 나무다리" style="object-position: 50% 30%;">
+        <div class="card">
+          <img src="images/about-2.png" alt="노을빛 돌담길에서 햇볕을 쬐는 고양이">
           <div class="card-body">
-            <span class="card-tag">명소</span>
-            <h3>하얀 등대와 바다 산책길</h3>
-            <p>파도 소리를 따라 나무다리를 건너면 만나는 해솔마을의 상징, 하얀 등대.</p>
-            <span class="card-more">명소 보러 가기 →</span>
+            <span class="card-tag">골목</span>
+            <h3>노을빛 돌담길</h3>
+            <p>꽃이 핀 돌담 사이로 바다가 보이는 골목, 고양이가 가장 좋아하는 자리예요.</p>
           </div>
-        </a>
+        </div>
 
-        <a href="food.html" class="card">
-          <img src="images/food-1.png" alt="김 가루와 전복을 올린 따뜻한 전복미역죽">
+        <div class="card">
+          <img src="images/festival-1.png" alt="등불이 늘어선 밤 바닷길">
           <div class="card-body">
-            <span class="card-tag">먹거리</span>
-            <h3>전복미역죽</h3>
-            <p>마을 앞바다에서 키운 전복과 미역을 푹 끓여 낸 따뜻한 한 그릇.</p>
-            <span class="card-more">먹거리 보러 가기 →</span>
+            <span class="card-tag">밤바다</span>
+            <h3>등불이 켜지는 바닷길</h3>
+            <p>축제의 밤이면 방파제와 마을 길이 따뜻한 등불로 가득 찹니다.</p>
           </div>
-        </a>
-
-        <a href="festival.html" class="card">
-          <img src="images/festival-1.png" alt="등불이 늘어선 밤 바닷길을 걷는 사람들">
-          <div class="card-body">
-            <span class="card-tag">축제 · 8월</span>
-            <h3>해솔 등불축제</h3>
-            <p>여름밤 바닷가를 수놓는 수천 개의 등불, 해솔마을의 가장 빛나는 날.</p>
-            <span class="card-more">축제 보러 가기 →</span>
-          </div>
-        </a>
+        </div>
       </div>
     </section>
   </main>
