@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>명소 | 별숲마을</title>
+  <style>
+    :root {
+      --night-deep: #12163a;
+      --night: #232d68;
+      --indigo: #4a56a8;
+      --moon: #ffd86b;
+      --moon-deep: #b07a00;
+      --forest: #2f6b57;
+      --cream: #fbf7ec;
+      --text: #2b2b3a;
+      --muted: #6b6b7d;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: var(--text);
+      background: var(--cream);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ===== 위: 메뉴 ===== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--night-deep);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .logo span { color: var(--moon); }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1.1rem;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+
+    .nav ul {
+      list-style: none;
+      display: flex;
+      gap: 4px;
+    }
+
+    .nav a {
+      display: block;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+
+    .nav a:hover { background: rgba(255, 255, 255, 0.12); }
+
+    .nav a.active {
+      background: var(--moon);
+      color: var(--night-deep);
+      font-weight: 800;
+    }
+
+    /* ===== 가운데: 큰 그림(밤하늘 SVG)과 소개 ===== */
+    .hero {
+      position: relative;
+      height: 46vh;
+      min-height: 300px;
+      overflow: hidden;
+      box-shadow: 0 14px 32px rgba(18, 22, 58, 0.45);
+    }
+
+    .hero.tall { height: 78vh; min-height: 420px; }
+
+    .hero > svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s ease;
+    }
+
+    .hero:hover > svg { transform: scale(1.06); }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(18, 22, 58, 0.5) 0%, rgba(18, 22, 58, 0) 28%),
+        linear-gradient(to top, rgba(18, 22, 58, 0.8) 0%, rgba(18, 22, 58, 0) 55%),
+        linear-gradient(120deg, rgba(255, 216, 107, 0.16), rgba(74, 86, 168, 0.12));
+      box-shadow: inset 0 0 120px rgba(18, 22, 58, 0.5);
+      pointer-events: none;
+    }
+
+    .hero-text {
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      right: 0;
+      bottom: 12%;
+      text-align: center;
+      color: #fff;
+      padding: 0 16px;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 800;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-text p {
+      margin-top: 8px;
+      font-size: clamp(1rem, 2.4vw, 1.35rem);
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    /* 반짝이는 별 */
+    .tw { animation: tw 3.2s ease-in-out infinite; }
+
+    @keyframes tw {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tw { animation: none; }
+    }
+
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 16px;
+    }
+
+    .section + .section { padding-top: 0; }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--night);
+    }
+
+    .section-sub {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ===== 카드 (그림 대신 그라디언트와 큰 이모지) ===== */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+
+    .cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+    .card,
+    .info-item,
+    .legend li,
+    .way,
+    .faq {
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 18px rgba(18, 22, 58, 0.1);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .card:hover,
+    .info-item:hover,
+    .legend li:hover,
+    .way:hover,
+    .faq:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 18px 34px rgba(74, 86, 168, 0.32);
+    }
+
+    /* 달빛 선: 카드 아래쪽에서 왼쪽 → 오른쪽으로 그려져요 */
+    .card::after,
+    .info-item::after,
+    .legend li::after,
+    .way::after,
+    .faq::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #ffe9a8, #ffc857, #8f9bff);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .card:hover::after,
+    .info-item:hover::after,
+    .legend li:hover::after,
+    .way:hover::after,
+    .faq:hover::after,
+    .faq[open]::after {
+      transform: scaleX(1);
+    }
+
+    .art {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: #fff;
+      font-size: 4.4rem;
+      background-image:
+        radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.85) 0 1.5px, transparent 2.5px),
+        radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.7) 0 1.5px, transparent 2.5px),
+        radial-gradient(circle at 62% 72%, rgba(255, 255, 255, 0.6) 0 1.5px, transparent 2.5px),
+        radial-gradient(circle at 30% 80%, rgba(255, 255, 255, 0.7) 0 1.5px, transparent 2.5px),
+        radial-gradient(circle at 88% 58%, rgba(255, 255, 255, 0.8) 0 1.5px, transparent 2.5px),
+        linear-gradient(160deg, var(--g1), var(--g2));
+    }
+
+    .art span {
+      display: block;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+      transition: transform 0.5s ease;
+    }
+
+    .card:hover .art span { transform: scale(1.2) rotate(-4deg); }
+
+    .a1 { --g1: #12163a; --g2: #4a56a8; }
+    .a2 { --g1: #12332c; --g2: #3b8068; }
+    .a3 { --g1: #3a2a6e; --g2: #b2639f; }
+    .a4 { --g1: #24305f; --g2: #e0955a; }
+    .a5 { --g1: #8a560d; --g2: #ffc857; }
+    .a6 { --g1: #123f4f; --g2: #4aa3ad; }
+
+    .card-body { padding: 20px; }
+
+    .card-tag,
+    .info-label,
+    .chip {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--moon-deep);
+      background: #fff3cf;
+      padding: 2px 10px;
+      border-radius: 999px;
+    }
+
+    .card h3 {
+      margin-top: 10px;
+      font-size: 1.3rem;
+      color: var(--night);
+      transition: color 0.25s;
+    }
+
+    .card:hover h3 { color: var(--moon-deep); }
+
+    .card p {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      word-break: keep-all;
+    }
+
+    .card-more {
+      display: inline-block;
+      margin-top: 14px;
+      font-weight: 700;
+      color: var(--indigo);
+    }
+
+    .card-meta {
+      list-style: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed #e3dcc6;
+      font-size: 0.9rem;
+      color: var(--indigo);
+      font-weight: 600;
+    }
+
+    .card-meta li + li { margin-top: 2px; }
+
+    .card-meta strong { color: var(--night); }
+
+    .card .card-price {
+      margin-top: 8px;
+      color: var(--moon-deep);
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    /* ===== 마을 소개 ===== */
+    .story {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      margin-top: 36px;
+    }
+
+    .story .art {
+      border-radius: var(--radius);
+      box-shadow: 0 4px 18px rgba(18, 22, 58, 0.1);
+      font-size: 6rem;
+    }
+
+    .story-text {
+      color: #444;
+      word-break: keep-all;
+    }
+
+    .story-text p + p { margin-top: 14px; }
+
+    .story-text strong { color: var(--night); }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+
+    .info-item {
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .info-value {
+      margin-top: 10px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--night);
+      transition: color 0.25s;
+    }
+
+    .info-item:hover .info-value { color: var(--moon-deep); }
+
+    .info-note {
+      margin-top: 2px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    /* ===== 축제 ===== */
+    .intro-text {
+      max-width: 680px;
+      margin: 28px auto 0;
+      text-align: center;
+      color: #444;
+      line-height: 1.9;
+      word-break: keep-all;
+      text-wrap: balance;
+    }
+
+    .intro-text p + p { margin-top: 20px; }
+
+    .intro-text strong { color: var(--night); }
+
+    .schedule {
+      margin-top: 36px;
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(18, 22, 58, 0.1);
+    }
+
+    .sch-head,
+    .sch-row {
+      display: grid;
+      grid-template-columns: 150px 110px 1fr 200px;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 24px;
+    }
+
+    .sch-head {
+      background: var(--night-deep);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .sch-row {
+      border-top: 1px solid #efe9d6;
+      transition: background 0.2s;
+    }
+
+    .sch-row:hover { background: #fff8e1; }
+
+    .sch-day { font-weight: 800; color: var(--moon-deep); }
+    .sch-time { font-weight: 700; color: var(--indigo); }
+    .sch-title { font-weight: 700; color: var(--night); }
+    .sch-place { color: var(--muted); font-size: 0.95rem; }
+
+    /* ===== 약도 / 오시는 길 ===== */
+    .map-box {
+      margin-top: 36px;
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(18, 22, 58, 0.1);
+    }
+
+    .map-box svg { display: block; width: 100%; height: auto; }
+
+    .map-note {
+      padding: 12px 20px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px dashed #e3dcc6;
+    }
+
+    .legend {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .legend li {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+    }
+
+    .num {
+      flex: none;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--indigo);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .legend strong { display: block; color: var(--night); transition: color 0.25s; }
+    .legend li:hover strong { color: var(--moon-deep); }
+    .legend .addr { font-size: 0.88rem; color: var(--muted); }
+
+    .ways {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+
+    .way-head {
+      padding: 20px 24px;
+      color: #fff;
+      background: linear-gradient(120deg, var(--night-deep), var(--indigo));
+    }
+
+    .way-head h3 { font-size: 1.4rem; }
+    .way-head p { margin-top: 2px; font-size: 0.95rem; color: #dfe3ff; }
+
+    .way-body { padding: 22px 24px 26px; }
+
+    .steps { list-style: none; counter-reset: step; }
+
+    .steps li {
+      position: relative;
+      padding-left: 38px;
+      word-break: keep-all;
+      color: #444;
+    }
+
+    .steps li + li { margin-top: 14px; }
+
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 1px;
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #fff3cf;
+      color: var(--moon-deep);
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    .steps strong { color: var(--night); }
+
+    .way-tip {
+      margin-top: 20px;
+      padding: 12px 16px;
+      border-left: 5px solid var(--moon);
+      background: var(--cream);
+      border-radius: 8px;
+      font-size: 0.92rem;
+      color: #555;
+      word-break: keep-all;
+    }
+
+    /* ===== 누르면 펼쳐지는 질문 ===== */
+    .faq-list { max-width: 820px; margin: 36px auto 0; }
+
+    .faq { cursor: pointer; }
+    .faq + .faq { margin-top: 16px; }
+
+    .faq summary {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 24px;
+      cursor: pointer;
+      list-style: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--night);
+      transition: color 0.25s;
+    }
+
+    .faq summary::-webkit-details-marker { display: none; }
+
+    .faq:hover summary,
+    .faq[open] summary { color: var(--moon-deep); }
+
+    .faq summary:focus-visible {
+      outline: 3px solid var(--moon);
+      outline-offset: -3px;
+      border-radius: var(--radius);
+    }
+
+    .q-badge {
+      flex: none;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--indigo);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .q-text { flex: 1; word-break: keep-all; }
+
+    .q-icon {
+      flex: none;
+      font-size: 1.6rem;
+      line-height: 1;
+      color: var(--indigo);
+      transition: transform 0.3s;
+    }
+
+    .faq[open] .q-icon { transform: rotate(45deg); }
+
+    .answer {
+      padding: 0 24px 24px 72px;
+      color: #555;
+      word-break: keep-all;
+      animation: open 0.35s ease;
+    }
+
+    .answer p + p { margin-top: 8px; }
+    .answer strong { color: var(--night); }
+
+    .answer a {
+      color: var(--indigo);
+      font-weight: 700;
+      border-bottom: 2px solid #ffc857;
+    }
+
+    .answer a:hover { color: var(--moon-deep); }
+
+    @keyframes open {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .more {
+      max-width: 820px;
+      margin: 40px auto 0;
+      padding: 24px;
+      text-align: center;
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 18px rgba(18, 22, 58, 0.1);
+      border-top: 5px solid var(--moon);
+      word-break: keep-all;
+    }
+
+    .more h3 { font-size: 1.2rem; color: var(--night); }
+    .more p { margin-top: 6px; color: var(--muted); }
+    .more strong { color: var(--moon-deep); }
+
+    /* ===== 아래: 연락처 ===== */
+    .site-footer {
+      background: var(--night-deep);
+      color: #d5d9f2;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+    }
+
+    .footer-inner h2 { color: #fff; font-size: 1.3rem; margin-bottom: 8px; }
+    .footer-inner h2 span { color: var(--moon); }
+
+    .contact-list { list-style: none; justify-self: end; }
+    .contact-list li { margin-bottom: 6px; }
+    .contact-list strong { color: #fff; margin-right: 6px; }
+
+    .copyright {
+      text-align: center;
+      font-size: 0.85rem;
+      padding: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      color: #98a0cc;
+    }
+
+    /* ===== 휴대폰 ===== */
+    @media (max-width: 900px) {
+      .menu-toggle { display: block; }
+
+      .nav {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: var(--night-deep);
+        padding: 8px 16px 16px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav.open { display: block; }
+
+      .nav ul { flex-direction: column; gap: 2px; }
+
+      .nav a { padding: 12px; }
+
+      .hero { height: 38vh; }
+      .hero.tall { height: 60vh; }
+
+      .cards,
+      .cards.cols-2 { grid-template-columns: 1fr; }
+
+      .story { grid-template-columns: 1fr; gap: 24px; }
+
+      .info-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+      .legend,
+      .ways { grid-template-columns: 1fr; }
+
+      .sch-head { display: none; }
+
+      .sch-row { grid-template-columns: auto 1fr; gap: 2px 12px; padding: 14px 16px; }
+      .sch-title,
+      .sch-place { grid-column: 1 / -1; }
+
+      .faq summary { padding: 16px 18px; font-size: 1rem; }
+      .answer { padding: 0 18px 20px 18px; }
+
+      .footer-inner { grid-template-columns: 1fr; }
+      .contact-list { justify-self: start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">별숲<span>마을</span></a>
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteNav">☰ 메뉴</button>
+      <nav class="nav" id="siteNav">
+        <ul>
+          <li><a href="index.html">홈</a></li>
+          <li><a href="about.html">마을 소개</a></li>
+          <li><a href="spots.html" class="active">명소</a></li>
+          <li><a href="food.html">먹거리</a></li>
+          <li><a href="festival.html">축제</a></li>
+          <li><a href="map.html">오시는 길</a></li>
+          <li><a href="faq.html">자주 묻는 질문</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <svg viewBox="0 0 1600 480" preserveAspectRatio="xMidYMid slice" role="img" aria-label="별이 가득한 밤하늘과 달, 산, 전나무 숲, 불 켜진 오두막이 있는 별숲마을 풍경">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#080b24"/>
+            <stop offset="0.5" stop-color="#1d2759"/>
+            <stop offset="0.85" stop-color="#4a559f"/>
+            <stop offset="1" stop-color="#8b7fc0"/>
+          </linearGradient>
+          <radialGradient id="moonGlow">
+            <stop offset="0" stop-color="#ffe9a8" stop-opacity="0.85"/>
+            <stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="winGlow">
+            <stop offset="0" stop-color="#ffd36b" stop-opacity="0.9"/>
+            <stop offset="1" stop-color="#ffd36b" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="1600" height="480" fill="url(#sky)"/>
+        <circle class="tw" cx="144" cy="256" r="2" fill="#fff" style="animation-delay:-0.9s"/>
+        <circle class="tw" cx="214" cy="118" r="2" fill="#fff" style="animation-delay:-1.9s"/>
+        <circle class="tw" cx="1268" cy="215" r="1.5" fill="#fff" style="animation-delay:-1.5s"/>
+        <circle class="tw" cx="232" cy="68" r="1.5" fill="#fff" style="animation-delay:-0.6s"/>
+        <circle class="tw" cx="858" cy="78" r="1.5" fill="#fff" style="animation-delay:-1.3s"/>
+        <circle class="tw" cx="598" cy="35" r="2" fill="#fff" style="animation-delay:-0.1s"/>
+        <circle class="tw" cx="1360" cy="178" r="1" fill="#fff" style="animation-delay:-1.0s"/>
+        <circle class="tw" cx="16" cy="277" r="1.5" fill="#fff" style="animation-delay:-2.6s"/>
+        <circle class="tw" cx="1282" cy="135" r="2" fill="#fff" style="animation-delay:-2.5s"/>
+        <circle class="tw" cx="1351" cy="173" r="1" fill="#fff" style="animation-delay:-1.6s"/>
+        <circle class="tw" cx="915" cy="270" r="1.5" fill="#fff" style="animation-delay:-1.6s"/>
+        <circle class="tw" cx="799" cy="112" r="2" fill="#fff" style="animation-delay:-2.3s"/>
+        <circle class="tw" cx="125" cy="200" r="2" fill="#fff" style="animation-delay:-1.7s"/>
+        <circle class="tw" cx="572" cy="115" r="1.5" fill="#fff" style="animation-delay:-1.1s"/>
+        <circle class="tw" cx="1579" cy="289" r="2" fill="#fff" style="animation-delay:-2.5s"/>
+        <circle class="tw" cx="153" cy="161" r="1.5" fill="#fff" style="animation-delay:-0.6s"/>
+        <circle class="tw" cx="499" cy="133" r="2" fill="#fff" style="animation-delay:-1.6s"/>
+        <circle class="tw" cx="1595" cy="132" r="1" fill="#fff" style="animation-delay:-2.3s"/>
+        <circle class="tw" cx="1284" cy="117" r="2" fill="#fff" style="animation-delay:-0.1s"/>
+        <circle class="tw" cx="696" cy="67" r="2" fill="#fff" style="animation-delay:-1.9s"/>
+        <circle class="tw" cx="1298" cy="27" r="1.5" fill="#fff" style="animation-delay:-1.3s"/>
+        <circle class="tw" cx="229" cy="12" r="1.5" fill="#fff" style="animation-delay:-0.8s"/>
+        <circle class="tw" cx="1573" cy="282" r="1" fill="#fff" style="animation-delay:-1.2s"/>
+        <circle class="tw" cx="556" cy="185" r="1" fill="#fff" style="animation-delay:-2.4s"/>
+        <circle class="tw" cx="666" cy="227" r="1.5" fill="#fff" style="animation-delay:-2.9s"/>
+        <circle class="tw" cx="1419" cy="102" r="2" fill="#fff" style="animation-delay:-0.9s"/>
+        <circle class="tw" cx="1534" cy="105" r="2" fill="#fff" style="animation-delay:-0.3s"/>
+        <circle class="tw" cx="43" cy="280" r="2" fill="#fff" style="animation-delay:-0.0s"/>
+        <circle class="tw" cx="1306" cy="124" r="1" fill="#fff" style="animation-delay:-2.4s"/>
+        <circle class="tw" cx="1317" cy="174" r="1" fill="#fff" style="animation-delay:-0.2s"/>
+        <circle class="tw" cx="1194" cy="96" r="1" fill="#fff" style="animation-delay:-1.2s"/>
+        <circle class="tw" cx="422" cy="239" r="1" fill="#fff" style="animation-delay:-2.6s"/>
+        <circle class="tw" cx="430" cy="179" r="1" fill="#fff" style="animation-delay:-2.6s"/>
+        <circle class="tw" cx="342" cy="202" r="1.5" fill="#fff" style="animation-delay:-1.3s"/>
+        <circle class="tw" cx="1325" cy="46" r="2" fill="#fff" style="animation-delay:-0.2s"/>
+        <circle class="tw" cx="340" cy="58" r="2" fill="#fff" style="animation-delay:-2.0s"/>
+        <circle class="tw" cx="1453" cy="276" r="1" fill="#fff" style="animation-delay:-1.0s"/>
+        <circle class="tw" cx="1124" cy="250" r="1" fill="#fff" style="animation-delay:-1.8s"/>
+        <circle class="tw" cx="1299" cy="181" r="1.5" fill="#fff" style="animation-delay:-2.6s"/>
+        <circle class="tw" cx="750" cy="28" r="2" fill="#fff" style="animation-delay:-2.2s"/>
+        <circle class="tw" cx="523" cy="32" r="2" fill="#fff" style="animation-delay:-1.7s"/>
+        <circle class="tw" cx="185" cy="20" r="1.5" fill="#fff" style="animation-delay:-1.9s"/>
+        <circle class="tw" cx="1479" cy="212" r="2" fill="#fff" style="animation-delay:-1.8s"/>
+        <circle class="tw" cx="109" cy="231" r="1" fill="#fff" style="animation-delay:-1.0s"/>
+        <circle class="tw" cx="549" cy="84" r="1.5" fill="#fff" style="animation-delay:-1.6s"/>
+        <circle class="tw" cx="363" cy="55" r="1.5" fill="#fff" style="animation-delay:-2.6s"/>
+        <circle class="tw" cx="554" cy="22" r="1.5" fill="#fff" style="animation-delay:-2.0s"/>
+        <circle class="tw" cx="1209" cy="23" r="1" fill="#fff" style="animation-delay:-1.0s"/>
+        <circle class="tw" cx="1493" cy="94" r="1" fill="#fff" style="animation-delay:-2.5s"/>
+        <circle class="tw" cx="1302" cy="15" r="1" fill="#fff" style="animation-delay:-2.4s"/>
+        <circle class="tw" cx="132" cy="47" r="2" fill="#fff" style="animation-delay:-0.2s"/>
+        <circle class="tw" cx="1422" cy="170" r="2" fill="#fff" style="animation-delay:-2.7s"/>
+        <circle class="tw" cx="1456" cy="183" r="2" fill="#fff" style="animation-delay:-0.0s"/>
+        <circle class="tw" cx="61" cy="251" r="2" fill="#fff" style="animation-delay:-1.5s"/>
+        <circle class="tw" cx="411" cy="241" r="2" fill="#fff" style="animation-delay:-0.0s"/>
+        <circle class="tw" cx="170" cy="223" r="1.5" fill="#fff" style="animation-delay:-2.6s"/>
+        <circle class="tw" cx="1314" cy="207" r="2" fill="#fff" style="animation-delay:-1.9s"/>
+        <circle class="tw" cx="297" cy="203" r="2" fill="#fff" style="animation-delay:-2.2s"/>
+        <circle class="tw" cx="1528" cy="219" r="1" fill="#fff" style="animation-delay:-2.4s"/>
+        <circle class="tw" cx="264" cy="123" r="1.5" fill="#fff" style="animation-delay:-0.8s"/>
+        <circle class="tw" cx="1458" cy="183" r="1" fill="#fff" style="animation-delay:-1.2s"/>
+        <circle class="tw" cx="1416" cy="129" r="1.5" fill="#fff" style="animation-delay:-1.3s"/>
+        <circle class="tw" cx="641" cy="262" r="2" fill="#fff" style="animation-delay:-0.3s"/>
+        <circle class="tw" cx="282" cy="231" r="1" fill="#fff" style="animation-delay:-1.1s"/>
+        <circle class="tw" cx="949" cy="38" r="1.5" fill="#fff" style="animation-delay:-0.5s"/>
+        <circle class="tw" cx="909" cy="9" r="1.5" fill="#fff" style="animation-delay:-1.1s"/>
+        <circle class="tw" cx="1296" cy="176" r="1.5" fill="#fff" style="animation-delay:-2.0s"/>
+        <circle class="tw" cx="77" cy="172" r="2" fill="#fff" style="animation-delay:-1.9s"/>
+        <circle class="tw" cx="55" cy="230" r="1.5" fill="#fff" style="animation-delay:-2.4s"/>
+        <circle class="tw" cx="159" cy="59" r="1.5" fill="#fff" style="animation-delay:-0.0s"/>
+        <circle class="tw" cx="1454" cy="137" r="2" fill="#fff" style="animation-delay:-2.2s"/>
+        <circle class="tw" cx="303" cy="119" r="1" fill="#fff" style="animation-delay:-2.5s"/>
+        <circle class="tw" cx="277" cy="279" r="2" fill="#fff" style="animation-delay:-2.8s"/>
+        <circle class="tw" cx="1315" cy="0" r="2" fill="#fff" style="animation-delay:-0.7s"/>
+        <circle class="tw" cx="139" cy="226" r="1" fill="#fff" style="animation-delay:-2.0s"/>
+        <circle class="tw" cx="1076" cy="244" r="2" fill="#fff" style="animation-delay:-2.1s"/>
+        <circle class="tw" cx="232" cy="97" r="1" fill="#fff" style="animation-delay:-2.1s"/>
+        <circle class="tw" cx="1142" cy="72" r="1" fill="#fff" style="animation-delay:-1.7s"/>
+        <circle class="tw" cx="743" cy="69" r="1" fill="#fff" style="animation-delay:-2.0s"/>
+        <circle class="tw" cx="1595" cy="129" r="1.5" fill="#fff" style="animation-delay:-1.0s"/>
+        <circle class="tw" cx="635" cy="104" r="2" fill="#fff" style="animation-delay:-0.6s"/>
+        <circle class="tw" cx="1521" cy="237" r="1.5" fill="#fff" style="animation-delay:-1.8s"/>
+        <circle class="tw" cx="1086" cy="249" r="1.5" fill="#fff" style="animation-delay:-1.0s"/>
+        <circle class="tw" cx="1210" cy="119" r="2" fill="#fff" style="animation-delay:-0.1s"/>
+        <circle class="tw" cx="667" cy="189" r="1.5" fill="#fff" style="animation-delay:-2.4s"/>
+        <circle class="tw" cx="1428" cy="32" r="1" fill="#fff" style="animation-delay:-2.6s"/>
+        <circle class="tw" cx="31" cy="118" r="1" fill="#fff" style="animation-delay:-1.0s"/>
+        <circle class="tw" cx="1306" cy="142" r="2" fill="#fff" style="animation-delay:-0.0s"/>
+        <circle class="tw" cx="840" cy="229" r="2" fill="#fff" style="animation-delay:-0.6s"/>
+        <circle class="tw" cx="1318" cy="214" r="1.5" fill="#fff" style="animation-delay:-1.8s"/>
+        <circle cx="980" cy="95" r="110" fill="url(#moonGlow)"/>
+        <circle cx="980" cy="95" r="40" fill="#ffe9a8"/>
+        <circle cx="968" cy="86" r="7" fill="#f3d58a" opacity="0.6"/>
+        <circle cx="992" cy="108" r="5" fill="#f3d58a" opacity="0.6"/>
+        <path d="M300 70 L402 116" stroke="#fff" stroke-opacity="0.75" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="300" cy="70" r="2.5" fill="#fff"/>
+        <path d="M0 330 L140 250 L280 320 L460 230 L640 320 L820 245 L1000 330 L1180 240 L1380 325 L1600 255 V480 H0Z" fill="#232e66"/>
+        <path d="M0 380 L180 310 L340 370 L540 295 L740 375 L940 310 L1160 380 L1340 315 L1600 370 V480 H0Z" fill="#172050"/>
+        <path d="M0 430 C300 390 600 420 800 412 C1100 404 1300 430 1600 405 V480 H0Z" fill="#0e1438"/>
+        <circle cx="1153" cy="404" r="46" fill="url(#winGlow)"/>
+        <rect x="1130" y="388" width="64" height="36" fill="#131a42"/>
+        <path d="M1120 388 L1162 356 L1204 388Z" fill="#0b1030"/>
+        <rect x="1146" y="398" width="14" height="12" fill="#ffd36b"/>
+        <path d="M6 434 L21 376 L37 434 Z M11 405 L21 362 L32 405 Z" fill="#0a0f2c"/>
+        <path d="M60 430 L70 392 L80 430 Z M63 411 L70 383 L77 411 Z" fill="#0a0f2c"/>
+        <path d="M84 449 L98 395 L113 449 Z M88 422 L98 382 L109 422 Z" fill="#0a0f2c"/>
+        <path d="M142 454 L154 410 L166 454 Z M146 432 L154 399 L162 432 Z" fill="#0a0f2c"/>
+        <path d="M160 432 L173 384 L186 432 Z M164 408 L173 372 L182 408 Z" fill="#0a0f2c"/>
+        <path d="M214 453 L227 404 L240 453 Z M218 429 L227 392 L236 429 Z" fill="#0a0f2c"/>
+        <path d="M251 430 L269 363 L287 430 Z M257 397 L269 347 L281 397 Z" fill="#0a0f2c"/>
+        <path d="M297 449 L312 392 L328 449 Z M302 421 L312 378 L323 421 Z" fill="#0a0f2c"/>
+        <path d="M334 438 L348 386 L362 438 Z M338 412 L348 373 L358 412 Z" fill="#0a0f2c"/>
+        <path d="M373 424 L386 375 L399 424 Z M377 400 L386 363 L395 400 Z" fill="#0a0f2c"/>
+        <path d="M402 430 L413 390 L424 430 Z M405 410 L413 380 L421 410 Z" fill="#0a0f2c"/>
+        <path d="M451 432 L464 384 L477 432 Z M455 408 L464 372 L473 408 Z" fill="#0a0f2c"/>
+        <path d="M485 445 L502 381 L520 445 Z M490 413 L502 365 L515 413 Z" fill="#0a0f2c"/>
+        <path d="M520 448 L537 385 L554 448 Z M525 417 L537 370 L549 417 Z" fill="#0a0f2c"/>
+        <path d="M577 448 L594 385 L611 448 Z M582 417 L594 370 L606 417 Z" fill="#0a0f2c"/>
+        <path d="M600 424 L611 383 L622 424 Z M603 404 L611 373 L619 404 Z" fill="#0a0f2c"/>
+        <path d="M655 447 L668 399 L681 447 Z M659 423 L668 387 L677 423 Z" fill="#0a0f2c"/>
+        <path d="M702 422 L719 359 L736 422 Z M707 391 L719 344 L731 391 Z" fill="#0a0f2c"/>
+        <path d="M741 433 L757 372 L774 433 Z M746 403 L757 357 L769 403 Z" fill="#0a0f2c"/>
+        <path d="M780 437 L795 382 L810 437 Z M785 410 L795 369 L805 410 Z" fill="#0a0f2c"/>
+        <path d="M810 429 L825 372 L841 429 Z M815 401 L825 358 L836 401 Z" fill="#0a0f2c"/>
+        <path d="M841 438 L858 375 L875 438 Z M846 407 L858 360 L870 407 Z" fill="#0a0f2c"/>
+        <path d="M904 431 L919 374 L935 431 Z M909 403 L919 360 L930 403 Z" fill="#0a0f2c"/>
+        <path d="M940 426 L958 358 L977 426 Z M946 392 L958 341 L971 392 Z" fill="#0a0f2c"/>
+        <path d="M978 448 L995 386 L1012 448 Z M983 417 L995 371 L1007 417 Z" fill="#0a0f2c"/>
+        <path d="M1010 433 L1025 375 L1041 433 Z M1015 404 L1025 361 L1036 404 Z" fill="#0a0f2c"/>
+        <path d="M1062 423 L1074 379 L1086 423 Z M1066 401 L1074 368 L1082 401 Z" fill="#0a0f2c"/>
+        <path d="M1080 444 L1090 406 L1100 444 Z M1083 425 L1090 397 L1097 425 Z" fill="#0a0f2c"/>
+        <path d="M1126 452 L1142 391 L1159 452 Z M1131 422 L1142 376 L1154 422 Z" fill="#0a0f2c"/>
+        <path d="M1162 454 L1175 405 L1188 454 Z M1166 430 L1175 393 L1184 430 Z" fill="#0a0f2c"/>
+        <path d="M1203 420 L1220 355 L1238 420 Z M1208 388 L1220 339 L1233 388 Z" fill="#0a0f2c"/>
+        <path d="M1247 422 L1263 363 L1279 422 Z M1252 393 L1263 349 L1274 393 Z" fill="#0a0f2c"/>
+        <path d="M1298 454 L1316 388 L1334 454 Z M1304 421 L1316 372 L1328 421 Z" fill="#0a0f2c"/>
+        <path d="M1320 429 L1333 379 L1347 429 Z M1324 404 L1333 367 L1343 404 Z" fill="#0a0f2c"/>
+        <path d="M1383 450 L1394 410 L1405 450 Z M1386 430 L1394 400 L1402 430 Z" fill="#0a0f2c"/>
+        <path d="M1400 432 L1411 389 L1423 432 Z M1403 411 L1411 379 L1420 411 Z" fill="#0a0f2c"/>
+        <path d="M1459 423 L1471 378 L1483 423 Z M1463 401 L1471 367 L1479 401 Z" fill="#0a0f2c"/>
+        <path d="M1486 446 L1503 381 L1521 446 Z M1491 414 L1503 365 L1516 414 Z" fill="#0a0f2c"/>
+        <path d="M1536 441 L1554 375 L1572 441 Z M1542 408 L1554 359 L1566 408 Z" fill="#0a0f2c"/>
+        <path d="M1569 452 L1587 383 L1606 452 Z M1575 418 L1587 366 L1600 418 Z" fill="#0a0f2c"/>
+        <path d="M1624 452 L1635 409 L1647 452 Z M1627 431 L1635 399 L1644 431 Z" fill="#0a0f2c"/>
+      </svg>
+      <div class="hero-text">
+        <h1>⭐ 명소</h1>
+        <p>밤에도 낮에도 좋은, 별숲마을 베스트 4곳이에요</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">🧭 별숲마을 가볼 만한 곳</h2>
+      <p class="section-sub">밤에도, 낮에도 좋은 곳으로만 골랐어요 🚶</p>
+
+      <div class="cards cols-2">
+        <div class="card">
+          <div class="art a1"><span>🔭</span></div>
+          <div class="card-body">
+            <span class="card-tag">⭐ 별 보기 1번지</span>
+            <h3>별바라기 언덕</h3>
+            <p>하늘이 가장 넓게 보이는 언덕이에요. 돗자리를 펴고 누우면 별이 와르르 쏟아져요.</p>
+            <ul class="card-meta">
+              <li>📍 강원도 별숲군 별빛길 1 (가상)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="art a2"><span>🌲</span></div>
+          <div class="card-body">
+            <span class="card-tag">🚶 포근한 산책</span>
+            <h3>달빛 숲길</h3>
+            <p>전나무 사이로 달빛이 스며드는 숲길이에요. 손전등은 약하게, 천천히 걸어 보세요.</p>
+            <ul class="card-meta">
+              <li>📍 강원도 별숲군 숲길로 28 (가상)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="art a6"><span>🌌</span></div>
+          <div class="card-body">
+            <span class="card-tag">💧 물에 비친 별</span>
+            <h3>은하수 연못</h3>
+            <p>바람이 없는 밤이면 연못에 별이 그대로 비쳐요. 하늘이 두 개가 된 것 같아요!</p>
+            <ul class="card-meta">
+              <li>📍 강원도 별숲군 연못길 5 (가상)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="art a4"><span>🦉</span></div>
+          <div class="card-body">
+            <span class="card-tag">🌄 일출 맛집</span>
+            <h3>부엉이 바위 전망대</h3>
+            <p>새벽에는 산 너머로 해가 떠오르고, 밤에는 부엉이 소리가 들려요. 일찍 일어나 볼 가치가 있어요!</p>
+            <ul class="card-meta">
+              <li>📍 강원도 별숲군 부엉이길 33 (가상)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <h2>별숲<span>마을</span> 여행 안내소</h2>
+        <p>궁금한 게 있으면 언제든 편하게 연락 주세요 😊</p>
+      </div>
+      <ul class="contact-list">
+        <li><strong>📞 전화</strong> 033-123-4567</li>
+        <li><strong>✉️ 이메일</strong> hello@byeolsup.example</li>
+        <li><strong>📍 주소</strong> 강원도 별숲군 별빛길 7 (가상)</li>
+        <li><strong>🕘 운영</strong> 매일 09:00 – 18:00</li>
+      </ul>
+    </div>
+    <p class="copyright">© 2026 별숲마을. 이 사이트의 마을과 정보는 가상으로 만든 것입니다.</p>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById("menuToggle");
+    const nav = document.getElementById("siteNav");
+
+    toggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open);
+      toggle.textContent = open ? "✕ 닫기" : "☰ 메뉴";
+    });
+  </script>
+</body>
+</html>
