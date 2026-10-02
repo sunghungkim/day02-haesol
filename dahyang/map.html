@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오시는 길 | 다향마을</title>
+  <style>
+    :root {
+      --night-deep: #17342a;
+      --night: #2d5a3d;
+      --indigo: #4f8a4f;
+      --moon: #f0c75e;
+      --moon-deep: #7a5c00;
+      --forest: #2f6b4a;
+      --cream: #f6f8ee;
+      --text: #2b2b3a;
+      --muted: #6b6b7d;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: var(--text);
+      background: var(--cream);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ===== 위: 메뉴 ===== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--night-deep);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .logo span { color: var(--moon); }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1.1rem;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+
+    .nav ul {
+      list-style: none;
+      display: flex;
+      gap: 4px;
+    }
+
+    .nav a {
+      display: block;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+
+    .nav a:hover { background: rgba(255, 255, 255, 0.12); }
+
+    .nav a.active {
+      background: var(--moon);
+      color: var(--night-deep);
+      font-weight: 800;
+    }
+
+    /* ===== 가운데: 큰 그림(밤하늘 SVG)과 소개 ===== */
+    .hero {
+      position: relative;
+      height: 46vh;
+      min-height: 300px;
+      overflow: hidden;
+      box-shadow: 0 14px 32px rgba(23, 52, 42, 0.45);
+    }
+
+    .hero.tall { height: 78vh; min-height: 420px; }
+
+    .hero > svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s ease;
+    }
+
+    .hero:hover > svg { transform: scale(1.06); }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(23, 52, 42, 0.5) 0%, rgba(23, 52, 42, 0) 28%),
+        linear-gradient(to top, rgba(23, 52, 42, 0.8) 0%, rgba(23, 52, 42, 0) 55%),
+        linear-gradient(120deg, rgba(240, 199, 94, 0.16), rgba(79, 138, 79, 0.12));
+      box-shadow: inset 0 0 120px rgba(23, 52, 42, 0.5);
+      pointer-events: none;
+    }
+
+    .hero-text {
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      right: 0;
+      bottom: 12%;
+      text-align: center;
+      color: #fff;
+      padding: 0 16px;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 800;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-text p {
+      margin-top: 8px;
+      font-size: clamp(1rem, 2.4vw, 1.35rem);
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    /* 반짝이는 별 */
+    .tw { animation: tw 3.2s ease-in-out infinite; }
+
+    @keyframes tw {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tw { animation: none; }
+    }
+
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 16px;
+    }
+
+    .section + .section { padding-top: 0; }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--night);
+    }
+
+    .section-sub {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ===== 카드 (그림 대신 그라디언트와 큰 이모지) ===== */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+
+    .cards.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+    .card,
+    .info-item,
+    .legend li,
+    .way,
+    .faq {
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 18px rgba(23, 52, 42, 0.1);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .card:hover,
+    .info-item:hover,
+    .legend li:hover,
+    .way:hover,
+    .faq:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 18px 34px rgba(79, 138, 79, 0.32);
+    }
+
+    /* 달빛 선: 카드 아래쪽에서 왼쪽 → 오른쪽으로 그려져요 */
+    .card::after,
+    .info-item::after,
+    .legend li::after,
+    .way::after,
+    .faq::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #f5e3a0, #f0c75e, #8fcf7a);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .card:hover::after,
+    .info-item:hover::after,
+    .legend li:hover::after,
+    .way:hover::after,
+    .faq:hover::after,
+    .faq[open]::after {
+      transform: scaleX(1);
+    }
+
+    .art {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: #fff;
+      font-size: 4.4rem;
+      background-image:
+        radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.85) 0 1.5px, transparent 2.5px),
+        radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.7) 0 1.5px, transparent 2.5px),
+        radial-gradient(circle at 62% 72%, rgba(255, 255, 255, 0.6) 0 1.5px, transparent 2.5px),
+        radial-gradient(circle at 30% 80%, rgba(255, 255, 255, 0.7) 0 1.5px, transparent 2.5px),
+        radial-gradient(circle at 88% 58%, rgba(255, 255, 255, 0.8) 0 1.5px, transparent 2.5px),
+        linear-gradient(160deg, var(--g1), var(--g2));
+    }
+
+    .art span {
+      display: block;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+      transition: transform 0.5s ease;
+    }
+
+    .card:hover .art span { transform: scale(1.2) rotate(-4deg); }
+
+    .a1 { --g1: #17342a; --g2: #4f8a4f; }
+    .a2 { --g1: #12332c; --g2: #3b8068; }
+    .a3 { --g1: #3a2a6e; --g2: #b2639f; }
+    .a4 { --g1: #24305f; --g2: #e0955a; }
+    .a5 { --g1: #8a560d; --g2: #ffc857; }
+    .a6 { --g1: #123f4f; --g2: #4aa3ad; }
+
+    .card-body { padding: 20px; }
+
+    .card-tag,
+    .info-label,
+    .chip {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--moon-deep);
+      background: #fbf0c4;
+      padding: 2px 10px;
+      border-radius: 999px;
+    }
+
+    .card h3 {
+      margin-top: 10px;
+      font-size: 1.3rem;
+      color: var(--night);
+      transition: color 0.25s;
+    }
+
+    .card:hover h3 { color: var(--moon-deep); }
+
+    .card p {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      word-break: keep-all;
+    }
+
+    .card-more {
+      display: inline-block;
+      margin-top: 14px;
+      font-weight: 700;
+      color: var(--indigo);
+    }
+
+    .card-meta {
+      list-style: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed #dfe5c8;
+      font-size: 0.9rem;
+      color: var(--indigo);
+      font-weight: 600;
+    }
+
+    .card-meta li + li { margin-top: 2px; }
+
+    .card-meta strong { color: var(--night); }
+
+    .card .card-price {
+      margin-top: 8px;
+      color: var(--moon-deep);
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    /* ===== 마을 소개 ===== */
+    .story {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      margin-top: 36px;
+    }
+
+    .story .art {
+      border-radius: var(--radius);
+      box-shadow: 0 4px 18px rgba(23, 52, 42, 0.1);
+      font-size: 6rem;
+    }
+
+    .story-text {
+      color: #444;
+      word-break: keep-all;
+    }
+
+    .story-text p + p { margin-top: 14px; }
+
+    .story-text strong { color: var(--night); }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+
+    .info-item {
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .info-value {
+      margin-top: 10px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--night);
+      transition: color 0.25s;
+    }
+
+    .info-item:hover .info-value { color: var(--moon-deep); }
+
+    .info-note {
+      margin-top: 2px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    /* ===== 축제 ===== */
+    .intro-text {
+      max-width: 680px;
+      margin: 28px auto 0;
+      text-align: center;
+      color: #444;
+      line-height: 1.9;
+      word-break: keep-all;
+      text-wrap: balance;
+    }
+
+    .intro-text p + p { margin-top: 20px; }
+
+    .intro-text strong { color: var(--night); }
+
+    .schedule {
+      margin-top: 36px;
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(23, 52, 42, 0.1);
+    }
+
+    .sch-head,
+    .sch-row {
+      display: grid;
+      grid-template-columns: 150px 110px 1fr 200px;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 24px;
+    }
+
+    .sch-head {
+      background: var(--night-deep);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .sch-row {
+      border-top: 1px solid #e8edd3;
+      transition: background 0.2s;
+    }
+
+    .sch-row:hover { background: #fbf6dc; }
+
+    .sch-day { font-weight: 800; color: var(--moon-deep); }
+    .sch-time { font-weight: 700; color: var(--indigo); }
+    .sch-title { font-weight: 700; color: var(--night); }
+    .sch-place { color: var(--muted); font-size: 0.95rem; }
+
+    /* ===== 약도 / 오시는 길 ===== */
+    .map-box {
+      margin-top: 36px;
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(23, 52, 42, 0.1);
+    }
+
+    .map-box svg { display: block; width: 100%; height: auto; }
+
+    .map-note {
+      padding: 12px 20px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px dashed #dfe5c8;
+    }
+
+    .legend {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .legend li {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+    }
+
+    .num {
+      flex: none;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--indigo);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .legend strong { display: block; color: var(--night); transition: color 0.25s; }
+    .legend li:hover strong { color: var(--moon-deep); }
+    .legend .addr { font-size: 0.88rem; color: var(--muted); }
+
+    .ways {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+
+    .way-head {
+      padding: 20px 24px;
+      color: #fff;
+      background: linear-gradient(120deg, var(--night-deep), var(--indigo));
+    }
+
+    .way-head h3 { font-size: 1.4rem; }
+    .way-head p { margin-top: 2px; font-size: 0.95rem; color: #e1f1e0; }
+
+    .way-body { padding: 22px 24px 26px; }
+
+    .steps { list-style: none; counter-reset: step; }
+
+    .steps li {
+      position: relative;
+      padding-left: 38px;
+      word-break: keep-all;
+      color: #444;
+    }
+
+    .steps li + li { margin-top: 14px; }
+
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 1px;
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #fbf0c4;
+      color: var(--moon-deep);
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    .steps strong { color: var(--night); }
+
+    .way-tip {
+      margin-top: 20px;
+      padding: 12px 16px;
+      border-left: 5px solid var(--moon);
+      background: var(--cream);
+      border-radius: 8px;
+      font-size: 0.92rem;
+      color: #555;
+      word-break: keep-all;
+    }
+
+    /* ===== 누르면 펼쳐지는 질문 ===== */
+    .faq-list { max-width: 820px; margin: 36px auto 0; }
+
+    .faq { cursor: pointer; }
+    .faq + .faq { margin-top: 16px; }
+
+    .faq summary {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 24px;
+      cursor: pointer;
+      list-style: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--night);
+      transition: color 0.25s;
+    }
+
+    .faq summary::-webkit-details-marker { display: none; }
+
+    .faq:hover summary,
+    .faq[open] summary { color: var(--moon-deep); }
+
+    .faq summary:focus-visible {
+      outline: 3px solid var(--moon);
+      outline-offset: -3px;
+      border-radius: var(--radius);
+    }
+
+    .q-badge {
+      flex: none;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--indigo);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .q-text { flex: 1; word-break: keep-all; }
+
+    .q-icon {
+      flex: none;
+      font-size: 1.6rem;
+      line-height: 1;
+      color: var(--indigo);
+      transition: transform 0.3s;
+    }
+
+    .faq[open] .q-icon { transform: rotate(45deg); }
+
+    .answer {
+      padding: 0 24px 24px 72px;
+      color: #555;
+      word-break: keep-all;
+      animation: open 0.35s ease;
+    }
+
+    .answer p + p { margin-top: 8px; }
+    .answer strong { color: var(--night); }
+
+    .answer a {
+      color: var(--indigo);
+      font-weight: 700;
+      border-bottom: 2px solid #ffc857;
+    }
+
+    .answer a:hover { color: var(--moon-deep); }
+
+    @keyframes open {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .more {
+      max-width: 820px;
+      margin: 40px auto 0;
+      padding: 24px;
+      text-align: center;
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 18px rgba(23, 52, 42, 0.1);
+      border-top: 5px solid var(--moon);
+      word-break: keep-all;
+    }
+
+    .more h3 { font-size: 1.2rem; color: var(--night); }
+    .more p { margin-top: 6px; color: var(--muted); }
+    .more strong { color: var(--moon-deep); }
+
+    /* ===== 아래: 연락처 ===== */
+    .site-footer {
+      background: var(--night-deep);
+      color: #d3e6d6;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+    }
+
+    .footer-inner h2 { color: #fff; font-size: 1.3rem; margin-bottom: 8px; }
+    .footer-inner h2 span { color: var(--moon); }
+
+    .contact-list { list-style: none; justify-self: end; }
+    .contact-list li { margin-bottom: 6px; }
+    .contact-list strong { color: #fff; margin-right: 6px; }
+
+    .copyright {
+      text-align: center;
+      font-size: 0.85rem;
+      padding: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      color: #93b79c;
+    }
+
+    /* ===== 휴대폰 ===== */
+    @media (max-width: 900px) {
+      .menu-toggle { display: block; }
+
+      .nav {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: var(--night-deep);
+        padding: 8px 16px 16px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav.open { display: block; }
+
+      .nav ul { flex-direction: column; gap: 2px; }
+
+      .nav a { padding: 12px; }
+
+      .hero { height: 38vh; }
+      .hero.tall { height: 60vh; }
+
+      .cards,
+      .cards.cols-2 { grid-template-columns: 1fr; }
+
+      .story { grid-template-columns: 1fr; gap: 24px; }
+
+      .info-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+      .legend,
+      .ways { grid-template-columns: 1fr; }
+
+      .sch-head { display: none; }
+
+      .sch-row { grid-template-columns: auto 1fr; gap: 2px 12px; padding: 14px 16px; }
+      .sch-title,
+      .sch-place { grid-column: 1 / -1; }
+
+      .faq summary { padding: 16px 18px; font-size: 1rem; }
+      .answer { padding: 0 18px 20px 18px; }
+
+      .footer-inner { grid-template-columns: 1fr; }
+      .contact-list { justify-self: start; }
+    }
+
+    /* ===== 다향마을 전용: 카드 그림 색과 질감 ===== */
+    .art {
+      background-image:
+        radial-gradient(circle at 20% 25%, rgba(255, 255, 255, 0.32) 0 14px, transparent 15px),
+        radial-gradient(circle at 82% 68%, rgba(255, 255, 255, 0.22) 0 24px, transparent 25px),
+        radial-gradient(circle at 64% 22%, rgba(255, 255, 255, 0.2) 0 9px, transparent 10px),
+        linear-gradient(160deg, var(--g1), var(--g2));
+    }
+
+    .a1 { --g1: #1f5a3a; --g2: #7fbf6a; }
+    .a2 { --g1: #1d4a45; --g2: #5fb3a0; }
+    .a3 { --g1: #7a3b10; --g2: #e0993f; }
+    .a4 { --g1: #3d7a55; --g2: #f2b48a; }
+    .a5 { --g1: #8a6a10; --g2: #f0c75e; }
+    .a6 { --g1: #2f5f7a; --g2: #8fcfe0; }
+
+    .hero::after {
+      background:
+        linear-gradient(to bottom, rgba(23, 52, 42, 0.45) 0%, rgba(23, 52, 42, 0) 28%),
+        linear-gradient(to top, rgba(23, 52, 42, 0.85) 0%, rgba(23, 52, 42, 0) 58%),
+        linear-gradient(120deg, rgba(240, 199, 94, 0.14), rgba(79, 138, 79, 0.1));
+      box-shadow: inset 0 0 120px rgba(23, 52, 42, 0.45);
+    }
+
+    /* 둥둥 떠다니는 찻잎 */
+    .leaf { animation: drift 7s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(14px, -10px) rotate(14deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .leaf { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">다향<span>마을</span></a>
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteNav">☰ 메뉴</button>
+      <nav class="nav" id="siteNav">
+        <ul>
+          <li><a href="index.html">홈</a></li>
+          <li><a href="about.html">마을 소개</a></li>
+          <li><a href="spots.html">명소</a></li>
+          <li><a href="food.html">먹거리</a></li>
+          <li><a href="festival.html">축제</a></li>
+          <li><a href="map.html" class="active">오시는 길</a></li>
+          <li><a href="faq.html">자주 묻는 질문</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <svg viewBox="0 0 1600 480" preserveAspectRatio="xMidYMid slice" role="img" aria-label="아침 안개가 깔린 언덕에 연둣빛 찻잎 밭이 줄지어 있고 한옥 정자가 있는 다향마을 풍경">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#8fd0bb"/>
+            <stop offset="0.55" stop-color="#f4efc6"/>
+            <stop offset="1" stop-color="#ffd9a8"/>
+          </linearGradient>
+          <radialGradient id="sunGlow">
+            <stop offset="0" stop-color="#fff1b8" stop-opacity="0.95"/>
+            <stop offset="1" stop-color="#fff1b8" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="mist" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+            <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.6"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <rect width="1600" height="480" fill="url(#sky)"/>
+        <circle cx="1000" cy="160" r="170" fill="url(#sunGlow)"/>
+        <circle cx="1000" cy="160" r="52" fill="#fff4c8"/>
+        <path d="M0 300 C200 240 360 280 520 250 C720 215 900 270 1100 240 C1300 210 1450 260 1600 235 V480 H0Z" fill="#9ccbb5" opacity="0.85"/>
+        <rect x="0" y="270" width="1600" height="80" fill="url(#mist)"/>
+        <path d="M0 345 C250 295 500 335 760 315 C1050 293 1300 345 1600 305 V480 H0Z" fill="#6fae7d"/>
+        <rect x="0" y="330" width="1600" height="60" fill="url(#mist)" opacity="0.7"/>
+        <path d="M0 405 C300 345 620 395 900 365 C1180 335 1400 385 1600 355 V480 H0Z" fill="#3f8a5a"/>
+        <path d="M0 412 C300 352 620 402 900 372 C1180 342 1400 392 1600 362" fill="none" stroke="#2d7a49" stroke-width="4" stroke-opacity="0.85" stroke-linecap="round"/>
+        <path d="M0 420 C300 360 620 410 900 380 C1180 350 1400 400 1600 370" fill="none" stroke="#58a56f" stroke-width="4" stroke-opacity="0.85" stroke-linecap="round"/>
+        <path d="M0 428 C300 368 620 418 900 388 C1180 358 1400 408 1600 378" fill="none" stroke="#2d7a49" stroke-width="4" stroke-opacity="0.85" stroke-linecap="round"/>
+        <path d="M0 436 C300 376 620 426 900 396 C1180 366 1400 416 1600 386" fill="none" stroke="#58a56f" stroke-width="4" stroke-opacity="0.85" stroke-linecap="round"/>
+        <path d="M0 444 C300 384 620 434 900 404 C1180 374 1400 424 1600 394" fill="none" stroke="#2d7a49" stroke-width="4" stroke-opacity="0.85" stroke-linecap="round"/>
+        <path d="M0 452 C300 392 620 442 900 412 C1180 382 1400 432 1600 402" fill="none" stroke="#58a56f" stroke-width="4" stroke-opacity="0.85" stroke-linecap="round"/>
+        <path d="M0 460 C300 400 620 450 900 420 C1180 390 1400 440 1600 410" fill="none" stroke="#2d7a49" stroke-width="4" stroke-opacity="0.85" stroke-linecap="round"/>
+        <path d="M0 468 C300 408 620 458 900 428 C1180 398 1400 448 1600 418" fill="none" stroke="#58a56f" stroke-width="4" stroke-opacity="0.85" stroke-linecap="round"/>
+        <path d="M0 476 C300 416 620 466 900 436 C1180 406 1400 456 1600 426" fill="none" stroke="#2d7a49" stroke-width="4" stroke-opacity="0.85" stroke-linecap="round"/>
+        <path d="M0 455 C300 425 700 460 1000 445 C1300 430 1450 460 1600 445 V480 H0Z" fill="#1f5a3a"/>
+        <path d="M1108 322 L1165 292 L1222 322 L1208 322 L1165 300 L1122 322Z" fill="#4a4a55"/>
+        <rect x="1128" y="322" width="74" height="26" fill="#f1e3c4"/>
+        <rect x="1152" y="330" width="26" height="18" fill="#8a5a36"/>
+        <rect x="1118" y="346" width="94" height="4" fill="#6a4a30"/>
+        <circle cx="239" cy="380" r="10" fill="#2a6b45"/>
+        <circle cx="20" cy="389" r="15" fill="#2a6b45"/>
+        <circle cx="949" cy="386" r="13" fill="#2a6b45"/>
+        <circle cx="1301" cy="384" r="14" fill="#2a6b45"/>
+        <circle cx="50" cy="375" r="15" fill="#2a6b45"/>
+        <circle cx="899" cy="394" r="9" fill="#2a6b45"/>
+        <circle cx="1429" cy="381" r="13" fill="#2a6b45"/>
+        <circle cx="1595" cy="398" r="11" fill="#2a6b45"/>
+        <circle cx="566" cy="378" r="16" fill="#2a6b45"/>
+        <circle cx="1422" cy="386" r="13" fill="#2a6b45"/>
+        <circle cx="486" cy="390" r="16" fill="#2a6b45"/>
+        <circle cx="357" cy="381" r="9" fill="#2a6b45"/>
+        <circle cx="694" cy="389" r="17" fill="#2a6b45"/>
+        <circle cx="766" cy="391" r="12" fill="#2a6b45"/>
+        <path d="M300 120 q8 -8 16 0 q8 -8 16 0" fill="none" stroke="#3d5a50" stroke-width="2" stroke-linecap="round"/>
+        <path d="M340 138 q8 -8 16 0 q8 -8 16 0" fill="none" stroke="#3d5a50" stroke-width="2" stroke-linecap="round"/>
+        <path d="M1280 100 q8 -8 16 0 q8 -8 16 0" fill="none" stroke="#3d5a50" stroke-width="2" stroke-linecap="round"/>
+        <circle class="tw" cx="67" cy="257" r="2" fill="#fff6c8" style="animation-delay:-1.8s"/>
+        <circle class="tw" cx="477" cy="72" r="2" fill="#fff6c8" style="animation-delay:-0.0s"/>
+        <circle class="tw" cx="834" cy="293" r="2" fill="#fff6c8" style="animation-delay:-2.4s"/>
+        <circle class="tw" cx="583" cy="198" r="2" fill="#fff6c8" style="animation-delay:-2.1s"/>
+        <circle class="tw" cx="1410" cy="179" r="2" fill="#fff6c8" style="animation-delay:-0.9s"/>
+        <circle class="tw" cx="1388" cy="169" r="2" fill="#fff6c8" style="animation-delay:-1.8s"/>
+        <circle class="tw" cx="1510" cy="72" r="2" fill="#fff6c8" style="animation-delay:-2.7s"/>
+        <circle class="tw" cx="1293" cy="172" r="2" fill="#fff6c8" style="animation-delay:-0.4s"/>
+        <circle class="tw" cx="1114" cy="311" r="2" fill="#fff6c8" style="animation-delay:-2.8s"/>
+        <circle class="tw" cx="1029" cy="109" r="2" fill="#fff6c8" style="animation-delay:-0.6s"/>
+        <circle class="tw" cx="824" cy="206" r="2" fill="#fff6c8" style="animation-delay:-0.0s"/>
+        <circle class="tw" cx="1" cy="186" r="2" fill="#fff6c8" style="animation-delay:-2.1s"/>
+        <circle class="tw" cx="1264" cy="137" r="2" fill="#fff6c8" style="animation-delay:-1.1s"/>
+        <circle class="tw" cx="1199" cy="55" r="2" fill="#fff6c8" style="animation-delay:-2.8s"/>
+        <circle class="tw" cx="1334" cy="84" r="2" fill="#fff6c8" style="animation-delay:-1.7s"/>
+        <circle class="tw" cx="1373" cy="288" r="2" fill="#fff6c8" style="animation-delay:-2.7s"/>
+        <circle class="tw" cx="1554" cy="261" r="2" fill="#fff6c8" style="animation-delay:-2.9s"/>
+        <circle class="tw" cx="488" cy="181" r="2" fill="#fff6c8" style="animation-delay:-2.0s"/>
+        <circle class="tw" cx="1070" cy="296" r="2" fill="#fff6c8" style="animation-delay:-0.4s"/>
+        <circle class="tw" cx="904" cy="169" r="2" fill="#fff6c8" style="animation-delay:-0.8s"/>
+        <circle class="tw" cx="1287" cy="223" r="2" fill="#fff6c8" style="animation-delay:-1.2s"/>
+        <circle class="tw" cx="802" cy="59" r="2" fill="#fff6c8" style="animation-delay:-2.3s"/>
+        <circle class="tw" cx="1209" cy="111" r="2" fill="#fff6c8" style="animation-delay:-2.4s"/>
+        <circle class="tw" cx="1043" cy="185" r="2" fill="#fff6c8" style="animation-delay:-0.0s"/>
+        <circle class="tw" cx="1201" cy="106" r="2" fill="#fff6c8" style="animation-delay:-1.8s"/>
+        <circle class="tw" cx="353" cy="108" r="2" fill="#fff6c8" style="animation-delay:-2.7s"/>
+        <circle class="tw" cx="711" cy="219" r="2" fill="#fff6c8" style="animation-delay:-2.1s"/>
+        <circle class="tw" cx="731" cy="72" r="2" fill="#fff6c8" style="animation-delay:-1.7s"/>
+        <circle class="tw" cx="1037" cy="89" r="2" fill="#fff6c8" style="animation-delay:-2.6s"/>
+        <circle class="tw" cx="1355" cy="312" r="2" fill="#fff6c8" style="animation-delay:-0.3s"/>
+        <path class="leaf" d="M260 200 q10 -14 22 -4 q-4 14 -22 4z" fill="#79b85f" stroke="#4f8a4f" stroke-width="1.5" style="animation-delay:-4s"/>
+        <path class="leaf" d="M520 170 q10 -14 22 -4 q-4 14 -22 4z" fill="#79b85f" stroke="#4f8a4f" stroke-width="1.5" style="animation-delay:-3s"/>
+        <path class="leaf" d="M760 230 q10 -14 22 -4 q-4 14 -22 4z" fill="#79b85f" stroke="#4f8a4f" stroke-width="1.5" style="animation-delay:-1s"/>
+        <path class="leaf" d="M1380 210 q10 -14 22 -4 q-4 14 -22 4z" fill="#79b85f" stroke="#4f8a4f" stroke-width="1.5" style="animation-delay:-5s"/>
+        <path class="leaf" d="M1480 150 q10 -14 22 -4 q-4 14 -22 4z" fill="#79b85f" stroke="#4f8a4f" stroke-width="1.5" style="animation-delay:-4s"/>
+      </svg>
+      <div class="hero-text">
+        <h1>🚌 오시는 길</h1>
+        <p>어렵지 않아요! 버스로도, 자동차로도 올 수 있어요</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">🗺️ 다향마을 약도</h2>
+      <p class="section-sub">찻길 하나만 따라가면 마을의 모든 곳을 만날 수 있어요</p>
+
+      <div class="map-box">
+        <svg viewBox="0 0 800 500" role="img" aria-label="다향마을 약도. 찻길을 따라 버스정류장, 여행 안내소, 초록 물결 차밭, 하늘 정자 전망대, 물안개 계곡, 다향 다실 한옥, 주차장이 있습니다.">
+          <defs>
+            <linearGradient id="mapSky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#bfe6d6"/>
+              <stop offset="1" stop-color="#fdeccb"/>
+            </linearGradient>
+            <linearGradient id="mapLand" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#e6f2cf"/>
+              <stop offset="1" stop-color="#c7e29f"/>
+            </linearGradient>
+          </defs>
+
+          <!-- 하늘과 먼 산 -->
+          <rect width="800" height="130" fill="url(#mapSky)"/>
+          <circle cx="90" cy="64" r="22" fill="#fff1b8"/>
+          <path d="M0 120 C120 70 230 110 340 84 C470 54 600 108 800 70 V140 H0Z" fill="#9ccbb5"/>
+          <path d="M0 132 C140 96 260 130 400 108 C540 88 670 130 800 104 V150 H0Z" fill="#78b595"/>
+
+          <!-- 육지 -->
+          <path d="M0 120 C120 108 240 128 360 116 C500 102 640 126 800 112 V500 H0Z" fill="url(#mapLand)"/>
+
+          <!-- 차밭 이랑 -->
+          <g fill="none" stroke-linecap="round" stroke-width="7">
+            <path d="M270 200 C330 180 400 190 450 214" stroke="#7fba6a"/>
+            <path d="M262 222 C328 202 408 212 462 238" stroke="#5aa053"/>
+            <path d="M254 244 C326 224 414 234 474 262" stroke="#7fba6a"/>
+            <path d="M250 266 C326 246 420 256 484 286" stroke="#5aa053"/>
+            <path d="M60 150 C120 134 180 140 224 160" stroke="#7fba6a"/>
+            <path d="M52 172 C118 156 184 162 232 184" stroke="#5aa053"/>
+            <path d="M46 194 C116 178 188 184 240 208" stroke="#7fba6a"/>
+          </g>
+
+          <!-- 계곡 물줄기 -->
+          <path d="M470 130 C500 200 520 260 600 320" fill="none" stroke="#9cc3ee" stroke-width="12" stroke-linecap="round"/>
+          <path d="M600 320 C640 336 700 330 770 350 L770 392 C700 376 640 380 600 360Z" fill="#8fc0ea" stroke="#fff" stroke-width="3"/>
+
+          <!-- 정원수 -->
+          <g fill="#4f8a4f">
+            <circle cx="120" cy="440" r="18"/><circle cx="150" cy="452" r="14"/>
+            <circle cx="560" cy="440" r="18"/><circle cx="590" cy="452" r="14"/>
+            <circle cx="430" cy="330" r="14"/><circle cx="452" cy="346" r="11"/>
+          </g>
+
+          <!-- 마을 집 -->
+          <g fill="#fff" stroke="#c9b98d" stroke-width="2">
+            <rect x="262" y="395" width="26" height="20"/>
+            <rect x="300" y="410" width="26" height="20"/>
+            <rect x="200" y="330" width="26" height="20"/>
+          </g>
+          <g fill="#7b5a3a">
+            <path d="M258 395 l17 -14 l17 14z"/>
+            <path d="M296 410 l17 -14 l17 14z"/>
+            <path d="M196 330 l17 -14 l17 14z"/>
+          </g>
+
+          <!-- 길 -->
+          <g fill="none" stroke-linecap="round">
+            <path d="M40 440 C150 445 200 410 235 385 C300 340 330 290 385 255 C450 215 520 235 560 175" stroke="#dccb9c" stroke-width="22"/>
+            <path d="M286 344 C380 380 520 350 640 335" stroke="#dccb9c" stroke-width="16"/>
+            <path d="M560 175 C620 140 660 200 700 192" stroke="#dccb9c" stroke-width="16"/>
+            <path d="M183 417 C160 390 140 360 130 335" stroke="#dccb9c" stroke-width="16"/>
+            <path d="M40 440 C150 445 200 410 235 385 C300 340 330 290 385 255 C450 215 520 235 560 175" stroke="#fff" stroke-width="16"/>
+            <path d="M286 344 C380 380 520 350 640 335" stroke="#fff" stroke-width="10"/>
+            <path d="M560 175 C620 140 660 200 700 192" stroke="#fff" stroke-width="10"/>
+            <path d="M183 417 C160 390 140 360 130 335" stroke="#fff" stroke-width="10"/>
+          </g>
+
+          <!-- 번호 표시 -->
+          <g font-size="22" font-weight="800" text-anchor="middle" fill="#fff">
+            <g><circle cx="40" cy="440" r="20" fill="#d9a21b" stroke="#fff" stroke-width="3"/><text x="40" y="448">1</text></g>
+            <g><circle cx="235" cy="385" r="20" fill="#2f6b4a" stroke="#fff" stroke-width="3"/><text x="235" y="393">2</text></g>
+            <g><circle cx="385" cy="255" r="20" fill="#2f6b4a" stroke="#fff" stroke-width="3"/><text x="385" y="263">3</text></g>
+            <g><circle cx="560" cy="175" r="20" fill="#2f6b4a" stroke="#fff" stroke-width="3"/><text x="560" y="183">4</text></g>
+            <g><circle cx="640" cy="335" r="20" fill="#2f6b4a" stroke="#fff" stroke-width="3"/><text x="640" y="343">5</text></g>
+            <g><circle cx="700" cy="192" r="20" fill="#2f6b4a" stroke="#fff" stroke-width="3"/><text x="700" y="200">6</text></g>
+            <g><circle cx="130" cy="335" r="20" fill="#d9a21b" stroke="#fff" stroke-width="3"/><text x="130" y="343">7</text></g>
+          </g>
+
+          <!-- 길 이름 -->
+          <text x="560" y="262" font-size="18" fill="#6b8f4a" font-weight="700" transform="rotate(-4 560 262)">찻길</text>
+        </svg>
+        <p class="map-note">※ 실제 지도가 아니라 이해를 돕기 위해 간단하게 그린 가상의 약도예요.</p>
+      </div>
+
+      <ul class="legend">
+        <li><span class="num">1</span><div><strong>🚌 다향 버스정류장</strong><span class="addr">마을로 들어오는 첫 번째 정류장</span></div></li>
+        <li><span class="num">2</span><div><strong>ℹ️ 여행 안내소</strong><span class="addr">전라남도 다향군 찻길 3 (가상)</span></div></li>
+        <li><span class="num">3</span><div><strong>🌱 초록 물결 차밭</strong><span class="addr">전라남도 다향군 찻길 1 (가상)</span></div></li>
+        <li><span class="num">4</span><div><strong>🏯 하늘 정자 전망대</strong><span class="addr">전라남도 다향군 언덕길 12 (가상)</span></div></li>
+        <li><span class="num">5</span><div><strong>💧 물안개 계곡</strong><span class="addr">전라남도 다향군 계곡길 8 (가상)</span></div></li>
+        <li><span class="num">6</span><div><strong>🍵 다향 다실 한옥</strong><span class="addr">전라남도 다향군 다실길 4 (가상)</span></div></li>
+        <li><span class="num">7</span><div><strong>🅿️ 다향 주차장</strong><span class="addr">누구나 무료로 세울 수 있어요</span></div></li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">🧳 이렇게 오세요</h2>
+      <p class="section-sub">모든 정보는 상상으로 만든 가상 정보예요 😉</p>
+
+      <div class="ways">
+        <div class="way">
+          <div class="way-head">
+            <h3>🚌 버스로 오는 법</h3>
+            <p>운전이 부담스럽다면 버스가 편해요</p>
+          </div>
+          <div class="way-body">
+            <ol class="steps">
+              <li><strong>다향시외버스터미널</strong>에 도착해요.</li>
+              <li><strong>다향 3번 버스</strong>를 타요. 약 35분 걸리고 하루 8번 다녀요. (첫차 07:00 · 막차 19:00)</li>
+              <li><strong>'다향 버스정류장'</strong>에서 내려요. 지도의 1번이에요.</li>
+              <li>찻길을 따라 걸어서 6분이면 <strong>여행 안내소</strong>에 도착해요.</li>
+            </ol>
+            <p class="way-tip">💡 축제 기간(5월)에는 버스가 늘어나요. 평소에는 막차 시간을 꼭 확인해 주세요!</p>
+          </div>
+        </div>
+
+        <div class="way">
+          <div class="way-head">
+            <h3>🚗 자동차로 오는 법</h3>
+            <p>차와 다식을 잔뜩 사 가고 싶다면 자동차가 좋아요</p>
+          </div>
+          <div class="way-body">
+            <ol class="steps">
+              <li>고속도로 <strong>다향 IC</strong>에서 내려요.</li>
+              <li><strong>'다향마을' 방면 국도 2번</strong>을 따라 약 10km, 15분쯤 달려요.</li>
+              <li>내비게이션에 <strong>'전라남도 다향군 찻길 3'</strong>을 입력하면 여행 안내소까지 안내해 줘요.</li>
+              <li><strong>다향 주차장</strong>(지도 7번)에 차를 세워요. 무료예요!</li>
+            </ol>
+            <p class="way-tip">💡 서울에서 약 4시간 걸려요. 새벽에는 차밭 근처에 안개가 자주 끼니, 천천히 안전하게 운전해 주세요 🌫️</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <h2>다향<span>마을</span> 여행 안내소</h2>
+        <p>궁금한 게 있으면 언제든 편하게 연락 주세요 😊</p>
+      </div>
+      <ul class="contact-list">
+        <li><strong>📞 전화</strong> 061-555-0123</li>
+        <li><strong>✉️ 이메일</strong> hello@dahyang.example</li>
+        <li><strong>📍 주소</strong> 전라남도 다향군 찻길 3 (가상)</li>
+        <li><strong>🕘 운영</strong> 매일 09:00 – 18:00</li>
+      </ul>
+    </div>
+    <p class="copyright">© 2026 다향마을. 이 사이트의 마을과 정보는 가상으로 만든 것입니다.</p>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById("menuToggle");
+    const nav = document.getElementById("siteNav");
+
+    toggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open);
+      toggle.textContent = open ? "✕ 닫기" : "☰ 메뉴";
+    });
+  </script>
+</body>
+</html>
