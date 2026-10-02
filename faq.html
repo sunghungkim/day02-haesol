@@ -205,6 +205,8 @@
       transform: scaleX(1);
     }
 
+    .faq { cursor: pointer; }
+
     .faq summary {
       display: flex;
       align-items: center;
@@ -500,6 +502,15 @@
       const open = nav.classList.toggle("open");
       toggle.setAttribute("aria-expanded", open);
       toggle.textContent = open ? "✕ 닫기" : "☰ 메뉴";
+    });
+
+    // 질문 줄(summary)은 기본으로 열리고 닫혀요. 펼쳐진 답 부분을 눌러도 카드가 접히도록,
+    // 카드 어디를 눌러도 열고 닫히게 해요. (답 안의 링크는 그대로 이동해요)
+    document.querySelectorAll(".faq").forEach((faq) => {
+      faq.addEventListener("click", (e) => {
+        if (e.target.closest("summary") || e.target.closest("a")) return;
+        faq.open = !faq.open;
+      });
     });
   </script>
 </body>
