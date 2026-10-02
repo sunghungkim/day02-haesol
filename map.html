@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오시는 길 | 해솔마을</title>
+  <style>
+    :root {
+      --sea-deep: #1f3b5c;
+      --sea: #2f6690;
+      --sea-light: #e8f1f8;
+      --sunset: #f08a4b;
+      --sunset-deep: #d9643a;
+      --sand: #fff8f0;
+      --text: #2b2b2b;
+      --muted: #6b6b6b;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: var(--text);
+      background: var(--sand);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ===== 위: 메뉴 ===== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--sea-deep);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .logo span { color: var(--sunset); }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1.1rem;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+
+    .nav ul {
+      list-style: none;
+      display: flex;
+      gap: 4px;
+    }
+
+    .nav a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+
+    .nav a:hover { background: rgba(255, 255, 255, 0.12); }
+
+    .nav a.active {
+      background: var(--sunset);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* ===== 가운데: 큰 그림과 소개 ===== */
+    .hero {
+      position: relative;
+      height: 46vh;
+      min-height: 300px;
+      overflow: hidden;
+      box-shadow: 0 14px 32px rgba(31, 59, 92, 0.35);
+    }
+
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 30%;
+      transition: transform 0.6s ease;
+    }
+
+    .hero:hover img {
+      transform: scale(1.06);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(31, 59, 92, 0.55) 0%, rgba(31, 59, 92, 0) 28%),
+        linear-gradient(to top, rgba(31, 59, 92, 0.8) 0%, rgba(31, 59, 92, 0) 58%),
+        linear-gradient(120deg, rgba(240, 138, 75, 0.28), rgba(47, 102, 144, 0.12));
+      box-shadow: inset 0 0 120px rgba(31, 59, 92, 0.45);
+      pointer-events: none;
+    }
+
+    .hero-text {
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      right: 0;
+      bottom: 12%;
+      text-align: center;
+      color: #fff;
+      padding: 0 16px;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 800;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-text p {
+      margin-top: 8px;
+      font-size: clamp(1rem, 2.4vw, 1.35rem);
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 16px;
+    }
+
+    .section + .section { padding-top: 0; }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--sea-deep);
+    }
+
+    .section-sub {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ===== 약도 ===== */
+    .map-box {
+      margin-top: 36px;
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(31, 59, 92, 0.1);
+    }
+
+    .map-box svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .map-note {
+      padding: 12px 20px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px dashed #e3d9cc;
+    }
+
+    .legend {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .legend li {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      box-shadow: 0 4px 18px rgba(31, 59, 92, 0.1);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .legend li:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 18px 34px rgba(240, 138, 75, 0.35);
+    }
+
+    .num {
+      flex: none;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--sunset);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .legend strong {
+      display: block;
+      color: var(--sea-deep);
+      transition: color 0.25s;
+    }
+
+    .legend li:hover strong { color: var(--sunset-deep); }
+
+    .legend span.addr {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    /* 노을색 선: 카드 아래쪽에서 왼쪽 → 오른쪽으로 그려져요 */
+    .legend li::after,
+    .way::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #f7b267, #f08a4b, #e8647a);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .legend li:hover::after,
+    .way:hover::after {
+      transform: scaleX(1);
+    }
+
+    /* ===== 오는 방법 ===== */
+    .ways {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+
+    .way {
+      position: relative;
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(31, 59, 92, 0.1);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .way:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 18px 34px rgba(240, 138, 75, 0.35);
+    }
+
+    .way-head {
+      padding: 20px 24px;
+      color: #fff;
+      background: linear-gradient(120deg, var(--sea-deep), var(--sea));
+    }
+
+    .way-head h3 { font-size: 1.4rem; }
+
+    .way-head p {
+      margin-top: 2px;
+      font-size: 0.95rem;
+      color: #dbe6f0;
+    }
+
+    .way-body { padding: 22px 24px 26px; }
+
+    .steps {
+      list-style: none;
+      counter-reset: step;
+    }
+
+    .steps li {
+      position: relative;
+      padding-left: 38px;
+      word-break: keep-all;
+      color: #444;
+    }
+
+    .steps li + li { margin-top: 14px; }
+
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 1px;
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #fdeee4;
+      color: var(--sunset-deep);
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    .steps strong { color: var(--sea-deep); }
+
+    .way-tip {
+      margin-top: 20px;
+      padding: 12px 16px;
+      border-left: 5px solid var(--sunset);
+      background: var(--sand);
+      border-radius: 8px;
+      font-size: 0.92rem;
+      color: #555;
+      word-break: keep-all;
+    }
+
+    /* ===== 아래: 연락처 ===== */
+    .site-footer {
+      background: var(--sea-deep);
+      color: #dbe6f0;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+    }
+
+    .footer-inner h2 {
+      color: #fff;
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+
+    .footer-inner h2 span { color: var(--sunset); }
+
+    .contact-list { list-style: none; justify-self: end; }
+    .contact-list li { margin-bottom: 6px; }
+    .contact-list strong { color: #fff; margin-right: 6px; }
+
+    .copyright {
+      text-align: center;
+      font-size: 0.85rem;
+      padding: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      color: #9fb3c8;
+    }
+
+    /* ===== 휴대폰 ===== */
+    @media (max-width: 900px) {
+      .menu-toggle { display: block; }
+
+      .nav {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: var(--sea-deep);
+        padding: 8px 16px 16px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .nav.open { display: block; }
+
+      .nav ul {
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .nav a { padding: 12px; }
+
+      .legend { grid-template-columns: 1fr; }
+
+      .ways { grid-template-columns: 1fr; }
+
+      .footer-inner { grid-template-columns: 1fr; }
+
+      .contact-list { justify-self: start; }
+
+      .hero { height: 38vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">해솔<span>마을</span></a>
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteNav">☰ 메뉴</button>
+      <nav class="nav" id="siteNav">
+        <ul>
+          <li><a href="index.html">홈</a></li>
+          <li><a href="about.html">마을 소개</a></li>
+          <li><a href="spots.html">명소</a></li>
+          <li><a href="food.html">먹거리</a></li>
+          <li><a href="festival.html">축제</a></li>
+          <li><a href="course.html">추천 코스</a></li>
+          <li><a href="stay.html">숙소</a></li>
+          <li><a href="gallery.html">갤러리</a></li>
+          <li><a href="map.html" class="active">오시는 길</a></li>
+          <li><a href="faq.html">자주 묻는 질문</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <img src="images/about-1.png" alt="푸른 바다와 항구가 내려다보이는 해솔마을">
+      <div class="hero-text">
+        <h1>🚌 오시는 길</h1>
+        <p>어렵지 않아요! 버스로도, 자동차로도 쉽게 올 수 있어요</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">🗺️ 해솔마을 약도</h2>
+      <p class="section-sub">바닷길 하나만 따라가면 마을의 모든 곳을 만날 수 있어요</p>
+
+      <div class="map-box">
+        <svg viewBox="0 0 800 500" role="img" aria-label="해솔마을 약도. 바닷길을 따라 버스정류장, 마을 광장, 여행 안내소, 솔숲 바닷길, 노을 전망대, 몽돌 해변, 하얀 등대가 있습니다.">
+          <defs>
+            <linearGradient id="seaGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#bfe0f3"/>
+              <stop offset="1" stop-color="#6fa9d3"/>
+            </linearGradient>
+            <linearGradient id="landGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#fff6e8"/>
+              <stop offset="1" stop-color="#fde2c0"/>
+            </linearGradient>
+            <radialGradient id="sunGlow">
+              <stop offset="0" stop-color="#f7b267" stop-opacity="0.9"/>
+              <stop offset="1" stop-color="#f7b267" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- 바다 -->
+          <rect width="800" height="500" fill="url(#seaGrad)"/>
+          <circle cx="690" cy="80" r="90" fill="url(#sunGlow)"/>
+          <circle cx="690" cy="80" r="32" fill="#f7b267"/>
+          <g fill="none" stroke="#fff" stroke-opacity="0.65" stroke-width="3" stroke-linecap="round">
+            <path d="M620 190 q15 -12 30 0 t30 0"/>
+            <path d="M690 260 q15 -12 30 0 t30 0"/>
+            <path d="M610 400 q15 -12 30 0 t30 0"/>
+            <path d="M700 450 q15 -12 30 0 t30 0"/>
+          </g>
+          <text x="660" y="335" font-size="24" fill="#fff" fill-opacity="0.9" text-anchor="middle">🌊 푸른 바다</text>
+
+          <!-- 육지 -->
+          <path d="M0 0 H570 C530 90 600 150 550 225 C500 300 575 350 515 415 C485 450 440 475 405 500 H0 Z"
+                fill="url(#landGrad)" stroke="#e9cfa8" stroke-width="3"/>
+
+          <!-- 솔숲 -->
+          <g fill="#6fa36b">
+            <path d="M95 235 l16 -36 l16 36z"/>
+            <path d="M125 250 l16 -36 l16 36z"/>
+            <path d="M70 262 l16 -36 l16 36z"/>
+            <path d="M160 240 l16 -36 l16 36z"/>
+            <path d="M200 255 l16 -36 l16 36z"/>
+          </g>
+
+          <!-- 마을 집 -->
+          <g fill="#fff" stroke="#d9b99a" stroke-width="2">
+            <rect x="150" y="95" width="26" height="20"/>
+            <rect x="260" y="105" width="26" height="20"/>
+            <rect x="290" y="130" width="26" height="20"/>
+            <rect x="215" y="110" width="26" height="20"/>
+          </g>
+          <g fill="#e8647a">
+            <path d="M146 95 l17 -14 l17 14z"/>
+            <path d="M256 105 l17 -14 l17 14z"/>
+            <path d="M286 130 l17 -14 l17 14z"/>
+            <path d="M211 110 l17 -14 l17 14z"/>
+          </g>
+
+          <!-- 몽돌 해변 -->
+          <g fill="#b9b2a8">
+            <ellipse cx="500" cy="300" rx="10" ry="6"/>
+            <ellipse cx="520" cy="312" rx="8" ry="5"/>
+            <ellipse cx="495" cy="322" rx="9" ry="6"/>
+            <ellipse cx="512" cy="330" rx="7" ry="5"/>
+          </g>
+
+          <!-- 길 -->
+          <g fill="none" stroke-linecap="round">
+            <path d="M40 70 C180 60 330 85 450 130 C510 160 470 250 490 320 C505 370 450 410 400 450" stroke="#e2c9a6" stroke-width="22"/>
+            <path d="M330 90 C300 140 230 170 150 195" stroke="#e2c9a6" stroke-width="16"/>
+            <path d="M40 70 C180 60 330 85 450 130 C510 160 470 250 490 320 C505 370 450 410 400 450" stroke="#fff" stroke-width="16"/>
+            <path d="M330 90 C300 140 230 170 150 195" stroke="#fff" stroke-width="10"/>
+          </g>
+
+          <!-- 번호 표시 -->
+          <g font-size="22" font-weight="800" text-anchor="middle" fill="#fff">
+            <g><circle cx="45" cy="70" r="20" fill="#d9643a" stroke="#fff" stroke-width="3"/><text x="45" y="78">1</text></g>
+            <g><circle cx="190" cy="60" r="20" fill="#f08a4b" stroke="#fff" stroke-width="3"/><text x="190" y="68">2</text></g>
+            <g><circle cx="345" cy="55" r="20" fill="#f08a4b" stroke="#fff" stroke-width="3"/><text x="345" y="63">3</text></g>
+            <g><circle cx="150" cy="195" r="20" fill="#f08a4b" stroke="#fff" stroke-width="3"/><text x="150" y="203">4</text></g>
+            <g><circle cx="515" cy="185" r="20" fill="#f08a4b" stroke="#fff" stroke-width="3"/><text x="515" y="193">5</text></g>
+            <g><circle cx="525" cy="350" r="20" fill="#f08a4b" stroke="#fff" stroke-width="3"/><text x="525" y="358">6</text></g>
+            <g><circle cx="400" cy="450" r="20" fill="#f08a4b" stroke="#fff" stroke-width="3"/><text x="400" y="458">7</text></g>
+          </g>
+
+          <!-- 길 이름 -->
+          <text x="250" y="150" font-size="18" fill="#a98a66" font-weight="700" transform="rotate(8 250 150)">솔숲길</text>
+          <text x="445" y="250" font-size="18" fill="#a98a66" font-weight="700" transform="rotate(80 445 250)">바닷길</text>
+        </svg>
+        <p class="map-note">※ 실제 지도가 아니라 이해를 돕기 위해 간단하게 그린 가상의 약도예요.</p>
+      </div>
+
+      <ul class="legend">
+        <li><span class="num">1</span><div><strong>🚌 해솔마을 입구 버스정류장</strong><span class="addr">마을로 들어오는 첫 번째 정류장</span></div></li>
+        <li><span class="num">2</span><div><strong>🎪 마을 광장</strong><span class="addr">축제 먹거리 장터가 열리는 곳</span></div></li>
+        <li><span class="num">3</span><div><strong>ℹ️ 여행 안내소</strong><span class="addr">전라남도 해솔군 바닷길 12 (가상)</span></div></li>
+        <li><span class="num">4</span><div><strong>🌲 솔숲 바닷길</strong><span class="addr">전라남도 해솔군 솔숲길 28 (가상)</span></div></li>
+        <li><span class="num">5</span><div><strong>🌅 노을 전망대</strong><span class="addr">전라남도 해솔군 노을길 45 (가상)</span></div></li>
+        <li><span class="num">6</span><div><strong>🏖️ 몽돌 해변</strong><span class="addr">전라남도 해솔군 몽돌길 7 (가상)</span></div></li>
+        <li><span class="num">7</span><div><strong>🗼 하얀 등대</strong><span class="addr">전라남도 해솔군 바닷길 1 (가상)</span></div></li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">🧳 이렇게 오세요</h2>
+      <p class="section-sub">모든 정보는 상상으로 만든 가상 정보예요 😉</p>
+
+      <div class="ways">
+        <div class="way">
+          <div class="way-head">
+            <h3>🚌 버스로 오는 법</h3>
+            <p>운전이 부담스럽다면 버스가 편해요</p>
+          </div>
+          <div class="way-body">
+            <ol class="steps">
+              <li><strong>해솔시외버스터미널</strong>에 도착해요.</li>
+              <li><strong>해솔 1번 버스</strong>를 타요. 약 40분 걸리고 하루 10번 다녀요. (첫차 08:00 · 막차 19:30)</li>
+              <li><strong>'해솔마을 입구'</strong> 정류장에서 내려요. 지도의 1번이에요.</li>
+              <li>바닷길을 따라 걸어서 5분이면 <strong>여행 안내소</strong>에 도착해요.</li>
+            </ol>
+            <p class="way-tip">💡 막차 시간이 일찍 끊기니, 돌아가는 버스 시간은 미리 꼭 확인해 주세요!</p>
+          </div>
+        </div>
+
+        <div class="way">
+          <div class="way-head">
+            <h3>🚗 자동차로 오는 법</h3>
+            <p>짐이 많거나 가족 여행이라면 자동차가 좋아요</p>
+          </div>
+          <div class="way-body">
+            <ol class="steps">
+              <li>고속도로 <strong>해솔 IC</strong>에서 내려요.</li>
+              <li><strong>'해솔마을' 방면 국도 15번</strong>을 따라 약 12km, 20분쯤 달려요.</li>
+              <li>내비게이션에 <strong>'전라남도 해솔군 바닷길 12'</strong>를 입력하면 여행 안내소까지 안내해 줘요.</li>
+              <li><strong>마을 공영주차장</strong>(마을 광장 옆)에 차를 세워요. 무료예요!</li>
+            </ol>
+            <p class="way-tip">💡 서울에서 약 4시간 30분, 광주에서 약 1시간 30분 걸려요. 등불축제 기간에는 임시 주차장이 열려요 🏮</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <h2>해솔<span>마을</span> 여행 안내소</h2>
+        <p>궁금한 게 있으면 언제든 편하게 연락 주세요 😊</p>
+      </div>
+      <ul class="contact-list">
+        <li><strong>📞 전화</strong> 061-123-4567</li>
+        <li><strong>✉️ 이메일</strong> hello@haesol.example</li>
+        <li><strong>📍 주소</strong> 전라남도 해솔군 바닷길 12 (가상)</li>
+        <li><strong>🕘 운영</strong> 매일 09:00 – 18:00</li>
+      </ul>
+    </div>
+    <p class="copyright">© 2026 해솔마을. 이 사이트의 마을과 정보는 가상으로 만든 것입니다.</p>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById("menuToggle");
+    const nav = document.getElementById("siteNav");
+
+    toggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open);
+      toggle.textContent = open ? "✕ 닫기" : "☰ 메뉴";
+    });
+  </script>
+</body>
+</html>
